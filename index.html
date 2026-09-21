@@ -270,7 +270,7 @@
   <div class="wrapper">
     <header>
       <h1>A&P 1 Unit 2 Mastery Engine</h1>
-      <div class="subtitle">OpenStax Anatomy & Physiology 2e • Chapters 5 & 6 (Live v4)</div>
+      <div class="subtitle">OpenStax Anatomy & Physiology 2e • Chapters 5 & 6 (No Hair/Nails Bank)</div>
     </header>
 
     <div id="bannerBox" class="banner locked">
@@ -307,22 +307,7 @@
       <span>Score: <span id="roundScore">0%</span></span>
     </div>
 
-    <!-- INITIAL DIRECT FALLBACK QUESTIONS (Guaranteed to be visible) -->
-    <div id="quizFeed" class="quiz-feed">
-      <div class="q-box">
-        <div class="q-title"><span>Question 1 • <strong style="color:#38bdf8;">Ch 5: Epidermis</strong></span><span>1 pt</span></div>
-        <div class="q-main">
-          <div class="q-text">Which stratum of the epidermis consists of a single layer of cuboidal mitotically active stem cells that continuously generate new keratinocytes?</div>
-          <div class="options-group">
-            <div class="opt-item" onclick="handleStaticClick(this, true, 'expl_static_1')"><div class="opt-dot"></div><span>Stratum basale</span></div>
-            <div class="opt-item" onclick="handleStaticClick(this, false, 'expl_static_1')"><div class="opt-dot"></div><span>Stratum spinosum</span></div>
-            <div class="opt-item" onclick="handleStaticClick(this, false, 'expl_static_1')"><div class="opt-dot"></div><span>Stratum granulosum</span></div>
-            <div class="opt-item" onclick="handleStaticClick(this, false, 'expl_static_1')"><div class="opt-dot"></div><span>Stratum corneum</span></div>
-          </div>
-          <div id="expl_static_1" class="expl-banner"><strong>✓ Correct!</strong> The stratum basale (germinativum) is the deepest layer attached to the basement membrane containing dividing stem cells.</div>
-        </div>
-      </div>
-    </div>
+    <div id="quizFeed" class="quiz-feed"></div>
 
     <div class="control-row">
       <button class="btn-clear-mem" id="btnReset" onclick="resetAllProgress()">Reset Progress</button>
@@ -331,21 +316,8 @@
   </div>
 
   <script>
-    function handleStaticClick(el, isCorrect, explId) {
-      const parent = el.parentElement;
-      Array.from(parent.children).forEach(c => c.classList.add('disabled'));
-      if (isCorrect) {
-        el.classList.add('picked-right');
-        document.getElementById(explId).className = 'expl-banner show-right';
-      } else {
-        el.classList.add('picked-wrong');
-        const expl = document.getElementById(explId);
-        expl.className = 'expl-banner show-wrong';
-        expl.innerHTML = '<strong>✗ Incorrect.</strong> The stratum basale is the active mitotic layer.';
-      }
-    }
-
     const BANK = [
+      /* CHAPTER 5: INTEGUMENTARY (IDs 1 - 25) - Core Skin Focus */
       { id: 1, chapter: 5, category: "Ch 5: Epidermis", prompt: "Which stratum of the epidermis consists of a single layer of cuboidal mitotically active stem cells that continuously generate new keratinocytes?", options: ["Stratum basale", "Stratum spinosum", "Stratum granulosum", "Stratum corneum"], answer: "Stratum basale", expl: "The stratum basale (germinativum) is the deepest layer attached to the basement membrane containing dividing stem cells." },
       { id: 2, chapter: 5, category: "Ch 5: Epidermis", prompt: "Which epidermal layer is found exclusively in thick skin (palms and soles)?", options: ["Stratum lucidum", "Stratum spinosum", "Stratum granulosum", "Stratum corneum"], answer: "Stratum lucidum", expl: "The stratum lucidum is a smooth, translucent layer of dead cells present only in thick skin." },
       { id: 3, chapter: 5, category: "Ch 5: Epidermal Cells", prompt: "Which dendritic cells reside in the stratum spinosum and function as antigen-presenting macrophages?", options: ["Langerhans cells", "Merkel cells", "Melanocytes", "Fibroblasts"], answer: "Langerhans cells", expl: "Langerhans cells are immune sentinels that phagocytize pathogens and activate defensive immune responses." },
@@ -354,24 +326,33 @@
       { id: 6, chapter: 5, category: "Ch 5: Dermis", prompt: "The superficial 20% of the dermis made of loose areolar connective tissue with dermal papillae is the:", options: ["Papillary layer", "Reticular layer", "Hypodermis", "Stratum basale"], answer: "Papillary layer", expl: "The papillary layer contains loose areolar connective tissue, capillary loops, and defensive cells." },
       { id: 7, chapter: 5, category: "Ch 5: Dermis", prompt: "The deep 80% of the dermis composed of dense irregular connective tissue with prominent collagen bundles is the:", options: ["Reticular layer", "Papillary layer", "Subcutaneous layer", "Epidermal stratum corneum"], answer: "Reticular layer", expl: "The reticular dermis contains thick dense irregular collagen networks providing high tensile strength." },
       { id: 8, chapter: 5, category: "Ch 5: Hypodermis", prompt: "The subcutaneous layer underlying the dermis that stores adipose tissue and anchors skin to fascia is the:", options: ["Hypodermis", "Reticular dermis", "Stratum basale", "Papillary layer"], answer: "Hypodermis", expl: "The hypodermis (superficial fascia) insulates the body and anchors the skin to underlying muscle." },
-      { id: 9, chapter: 5, category: "Ch 5: Cutaneous Glands", prompt: "Exocrine glands that release an oily secretion (sebum) via holocrine secretion into hair follicles are:", options: ["Sebaceous glands", "Eccrine sweat glands", "Apocrine sweat glands", "Ceruminous glands"], answer: "Sebaceous glands", expl: "Sebaceous glands rupture entire cells to lubricate hair and skin with lipid-rich sebum." },
+      { id: 9, chapter: 5, category: "Ch 5: Cutaneous Glands", prompt: "Exocrine glands that release an oily secretion (sebum) via holocrine secretion to lubricate skin and inhibit bacteria are:", options: ["Sebaceous glands", "Eccrine sweat glands", "Apocrine sweat glands", "Ceruminous glands"], answer: "Sebaceous glands", expl: "Sebaceous glands rupture entire cells to lubricate skin with lipid-rich sebum." },
       { id: 10, chapter: 5, category: "Ch 5: Cutaneous Glands", prompt: "Coiled tubular glands distributed across the body that produce watery perspiration for thermoregulation are:", options: ["Eccrine sweat glands", "Apocrine sweat glands", "Sebaceous glands", "Ceruminous glands"], answer: "Eccrine sweat glands", expl: "Eccrine sweat glands secrete a watery electrolyte solution directly onto the skin surface to cool the body." },
-      { id: 11, chapter: 5, category: "Ch 5: Cutaneous Glands", prompt: "Which large sweat glands become active at puberty in the axillary and groin areas, causing body odor upon bacterial breakdown?", options: ["Apocrine sweat glands", "Eccrine sweat glands", "Holocrine glands", "Mammary glands"], answer: "Apocrine sweat glands", expl: "Apocrine glands empty viscous organic secretions into hair follicles that produce odor when bacteria feed on them." },
+      { id: 11, chapter: 5, category: "Ch 5: Cutaneous Glands", prompt: "Which large sweat glands become active at puberty in the axillary and groin areas, causing body odor upon bacterial breakdown?", options: ["Apocrine sweat glands", "Eccrine sweat glands", "Holocrine glands", "Mammary glands"], answer: "Apocrine sweat glands", expl: "Apocrine glands empty viscous organic secretions that produce odor when bacteria feed on them." },
       { id: 12, chapter: 5, category: "Ch 5: Sensation", prompt: "Large, encapsulated sensory receptors deep in the dermis and hypodermis that detect deep pressure and vibration are:", options: ["Pacinian corpuscles", "Meissner corpuscles", "Merkel discs", "Free nerve endings"], answer: "Pacinian corpuscles", expl: "Pacinian (lamellar) corpuscles are onion-like mechanoreceptors tuned to deep pressure and vibration." },
-      { id: 13, chapter: 5, category: "Ch 5: Hair Anatomy", prompt: "The bundle of smooth muscle attached to a hair follicle that causes goosebumps upon contraction is the:", options: ["Arrector pili", "Bulbous rectus", "Orbicularis cutis", "Follicular sphincter"], answer: "Arrector pili", expl: "The arrector pili contracts under sympathetic stimulation to pull hair shafts perpendicular to skin." },
+      
+      /* REPLACEMENT 13: Clinical Skin Color (Replaces hair muscle) */
+      { id: 13, chapter: 5, category: "Ch 5: Clinical Signs", prompt: "A bluish tint to the skin and mucous membranes resulting from poorly oxygenated hemoglobin in dermal blood flow is termed:", options: ["Cyanosis", "Erythema", "Jaundice", "Pallor"], answer: "Cyanosis", expl: "Cyanosis reflects deficient systemic arterial oxygenation, appearing clinically as a dark blue or purple hue in skin and lips." },
+      
       { id: 14, chapter: 5, category: "Ch 5: Metabolic Functions", prompt: "Keratinocytes use solar UV radiation to convert a cholesterol derivative into cholecalciferol, the precursor to:", options: ["Vitamin D", "Melatonin", "Keratin", "Vitamin A"], answer: "Vitamin D", expl: "Cholecalciferol is synthesized in the skin and modified by the liver and kidneys into active Vitamin D." },
       { id: 15, chapter: 5, category: "Ch 5: Keratinization", prompt: "In which epidermal layer do cells begin dying, accumulate keratohyalin, and release water-proofing glycolipids?", options: ["Stratum granulosum", "Stratum basale", "Stratum spinosum", "Stratum lucidum"], answer: "Stratum granulosum", expl: "In the stratum granulosum, keratinocytes disintegrate their nuclei and produce water-resistant glycolipid seals." },
       { id: 16, chapter: 5, category: "Ch 5: Clinical Burns", prompt: "A burn injury damaging the entire epidermis and upper dermis, marked by localized pain, erythema, and blisters, is a:", options: ["Second-degree burn", "First-degree burn", "Third-degree burn", "Fourth-degree burn"], answer: "Second-degree burn", expl: "Second-degree burns penetrate into the dermis, causing fluid blisters between the epidermis and dermis." },
       { id: 17, chapter: 5, category: "Ch 5: Oncology", prompt: "The most dangerous form of skin cancer, originating from pigment-producing cells and tracked by ABCDE rules, is:", options: ["Melanoma", "Basal cell carcinoma", "Squamous cell carcinoma", "Kaposi sarcoma"], answer: "Melanoma", expl: "Melanoma arises from melanocytes and has high potential for metastasis." },
       { id: 18, chapter: 5, category: "Ch 5: Dermis", prompt: "Predominant directional orientations of collagen bundles in the reticular dermis followed by surgeons are:", options: ["Cleavage lines", "Friction ridges", "Flexure lines", "Dermal papillae"], answer: "Cleavage lines", expl: "Cleavage (Langer) lines represent dermal collagen alignment; incisions parallel to them heal with less scarring." },
-      { id: 19, chapter: 5, category: "Ch 5: Nails", prompt: "The actively growing proximal thickened portion of the nail bed responsible for nail growth is the:", options: ["Nail matrix", "Hyponychium", "Eponychium", "Lunula"], answer: "Nail matrix", expl: "The nail matrix contains dividing epithelial cells that produce the keratinized nail plate." },
-      { id: 20, chapter: 5, category: "Ch 5: Nails", prompt: "The fold of stratum corneum projecting onto the proximal edge of the nail body (the cuticle) is the:", options: ["Eponychium", "Hyponychium", "Perionychium", "Lunula"], answer: "Eponychium", expl: "The eponychium (cuticle) seals the junction between the digit skin and the emerging nail body." },
+      
+      /* REPLACEMENT 19: Chemical Protection Barrier (Replaces nail matrix) */
+      { id: 19, chapter: 5, category: "Ch 5: Chemical Barrier", prompt: "The low pH of cutaneous secretions (sebum and sweat) that forms a chemical film retarding bacterial multiplication on the skin surface is known as the:", options: ["Acid mantle", "Mucous sheath", "Keratohyalin shield", "Epidermal biofilm"], answer: "Acid mantle", expl: "The acidic surface film (pH ~4.5 to 5.5) creates a hostile chemical environment that retards bacterial growth." },
+      
+      /* REPLACEMENT 20: Dermal Papillae Mechanoreceptors (Replaces cuticle/eponychium) */
+      { id: 20, chapter: 5, category: "Ch 5: Sensation", prompt: "Small egg-shaped touch mechanoreceptors residing within dermal papillae that respond to light touch and low-frequency vibrations are:", options: ["Meissner (tactile) corpuscles", "Pacinian corpuscles", "Ruffini endings", "Nociceptors"], answer: "Meissner (tactile) corpuscles", expl: "Meissner corpuscles reside within dermal papillae right below the epidermis to sense discriminative touch and slip." },
+      
       { id: 21, chapter: 5, category: "Ch 5: Thermoregulation", prompt: "When body temperature rises, dermal blood vessels respond by ________ to release heat to the environment.", options: ["Dilating (vasodilation)", "Constricting (vasoconstriction)", "Clotting", "Collapsing"], answer: "Dilating (vasodilation)", expl: "Dermal arterioles dilate to send warm blood closer to the skin surface for radiant heat loss." },
       { id: 22, chapter: 5, category: "Ch 5: Epidermis", prompt: "Which cell junctions tightly connect adjacent keratinocytes in the stratum spinosum, causing a spiny histological look?", options: ["Desmosomes", "Gap junctions", "Tight junctions", "Hemidesmosomes"], answer: "Desmosomes", expl: "Desmosomes are anchoring junctions that bridge neighboring intermediate filaments together." },
       { id: 23, chapter: 5, category: "Ch 5: Glands", prompt: "Modified apocrine sweat glands in the external ear canal that secrete earwax are:", options: ["Ceruminous glands", "Mammary glands", "Sebaceous glands", "Eccrine glands"], answer: "Ceruminous glands", expl: "Ceruminous glands secrete earwax (cerumen) to trap dirt and insects entering the ear canal." },
       { id: 24, chapter: 5, category: "Ch 5: Epidermis", prompt: "The outermost layer of 20 to 30 layers of dead, flattened keratinized cells that continuously slough off is the:", options: ["Stratum corneum", "Stratum granulosum", "Stratum spinosum", "Stratum lucidum"], answer: "Stratum corneum", expl: "The stratum corneum is the durable, keratin-filled protective outer barrier of the skin." },
       { id: 25, chapter: 5, category: "Ch 5: Clinical Pathology", prompt: "An autoimmune disease where rapid epidermal proliferation causes thick, silvery scaly plaques on red skin is:", options: ["Psoriasis", "Eczema", "Basal cell carcinoma", "Alopecia"], answer: "Psoriasis", expl: "Psoriasis results from hyperactive immune signaling driving keratinocytes to divide too quickly." },
 
+      /* CHAPTER 6: SKELETAL SYSTEM (IDs 26 - 50) */
       { id: 26, chapter: 6, category: "Ch 6: Bone Cells", prompt: "Large multinucleated cells derived from white blood cell lines that secrete acid to dissolve bone matrix are:", options: ["Osteoclasts", "Osteoblasts", "Osteocytes", "Osteogenic cells"], answer: "Osteoclasts", expl: "Osteoclasts resorb mineralized bone tissue by releasing hydrochloric acid and lysosomal enzymes." },
       { id: 27, chapter: 6, category: "Ch 6: Bone Cells", prompt: "Bone-building cells that synthesize and secrete organic bone matrix (osteoid) are:", options: ["Osteoblasts", "Osteoclasts", "Osteocytes", "Chondrocytes"], answer: "Osteoblasts", expl: "Osteoblasts deposit collagen and proteoglycans (osteoid) and initiate calcification." },
       { id: 28, chapter: 6, category: "Ch 6: Bone Cells", prompt: "Mature bone cells entrapped inside lacunae that maintain matrix and sense mechanical stress are:", options: ["Osteocytes", "Osteoclasts", "Osteoprogenitor cells", "Fibroblasts"], answer: "Osteocytes", expl: "Osteocytes monitor physical strain and communicate through canaliculi to direct remodeling." },
@@ -582,7 +563,7 @@
       else timer = null;
     }
 
-    // Immediately run the dynamic 10-question set
+    // Run dynamic generator immediately on page load
     runDynamicQuiz();
   </script>
 </body>
