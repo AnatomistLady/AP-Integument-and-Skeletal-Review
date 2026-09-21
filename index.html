@@ -45,7 +45,7 @@
       margin-top: 5px;
     }
 
-    /* TIER PROGRESSION BANNER */
+    /* PROGRESSION BANNER */
     .tier-banner {
       width: 100%;
       max-width: 720px;
@@ -216,7 +216,7 @@
       justify-content: center;
     }
 
-    /* EVALUATION STYLES */
+    /* FEEDBACK EVALUATION */
     .opt-btn.correct-choice {
       background: #064e3b !important;
       border: 2px solid #10b981 !important;
@@ -365,13 +365,10 @@
   </div>
 
   <script>
-    const UNLOCK_THRESHOLD = 20; // Must master 20/25 skin questions to unlock bone
+    const UNLOCK_THRESHOLD = 20;
 
-    /* 50-QUESTION TEST BANK (25 INTEGUMENTARY, 25 SKELETAL) */
     const QUESTION_BANK = [
-      /* =========================================================
-         CHAPTER 5: THE INTEGUMENTARY SYSTEM (1 - 25)
-         ========================================================= */
+      /* CHAPTER 5: INTEGUMENTARY (1 - 25) */
       {
         id: 1, chapter: 5, chapName: "Ch 5: Epidermal Strata",
         prompt: "Which stratum of the epidermis consists of a single layer of cuboidal mitotically active stem cells that continuously generate new keratinocytes?",
@@ -548,9 +545,7 @@
         explanation: "Psoriasis is an autoimmune disorder where excessive T-cell signaling drives rapid epidermal mitosis, causing immature keratinocytes to pile up in scaly plaques."
       },
 
-      /* =========================================================
-         CHAPTER 6: THE SKELETAL SYSTEM & BONE TISSUE (26 - 50)
-         ========================================================= */
+      /* CHAPTER 6: SKELETAL SYSTEM (26 - 50) */
       {
         id: 26, chapter: 6, chapName: "Ch 6: Bone Cells",
         prompt: "Giant, multinucleated bone-resorbing cells derived from hematopoietic monocyte/macrophage lineages that secrete acid and enzymes to break down bone matrix are:",
@@ -652,9 +647,9 @@
       {
         id: 40, chapter: 6, chapName: "Ch 6: Chemical Matrix",
         prompt: "The primary inorganic mineral salt component of bone matrix that provides extreme compressive hardness and rigidity is:",
-        options: ["Hydroxyapatite (calcium phosphate crystals)", "Osteoid collagen", "Chondroitin sulfate", "Calcium carbonate paste"],
+        options: ["Hydroxyapatite", "Osteoid collagen", "Chondroitin sulfate", "Calcium carbonate paste"],
         correct: 0,
-        explanation: "Hydroxyapatite [Ca10(PO4)6(OH)2] represents ~65% of bone dry weight, forming crystallized mineral plates around collagen to resist compression."
+        explanation: "Hydroxyapatite represents approximately 65% of bone dry weight, forming crystallized mineral plates around collagen fibers to resist compressive forces."
       },
       {
         id: 41, chapter: 6, chapName: "Ch 6: Bone Ossification",
@@ -686,7 +681,7 @@
       },
       {
         id: 45, chapter: 6, chapName: "Ch 6: Calcium Homeostasis",
-        prompt: "Which hormone is released by the parathyroid glands in response to low systemic blood calcium (Ca²⁺) levels to stimulate osteoclast activity?",
+        prompt: "Which hormone is released by the parathyroid glands in response to low systemic blood calcium (Ca2+) levels to stimulate osteoclast activity?",
         options: ["Parathyroid hormone (PTH)", "Calcitonin", "Thyroxine", "Insulin-like growth factor"],
         correct: 0,
         explanation: "Parathyroid hormone (PTH) stimulates osteoclasts to resorb bone matrix, activates kidney calcitriol synthesis, and reduces urinary calcium loss to raise blood calcium."
@@ -709,10 +704,10 @@
         id: 48, chapter: 6, chapName: "Ch 6: Fracture Repair",
         prompt: "What is the correct sequential order of biological stages during bone fracture repair?",
         options: [
-          "Hematoma formation → Fibrocartilaginous callus → Bony (hard) callus → Bone remodeling",
-          "Fibrocartilaginous callus → Hematoma formation → Bony callus → Bone remodeling",
-          "Bony callus → Hematoma formation → Fibrocartilaginous callus → Bone remodeling",
-          "Hematoma formation → Bony callus → Fibrocartilaginous callus → Remodeling"
+          "Hematoma formation -> Fibrocartilaginous callus -> Bony callus -> Bone remodeling",
+          "Fibrocartilaginous callus -> Hematoma formation -> Bony callus -> Bone remodeling",
+          "Bony callus -> Hematoma formation -> Fibrocartilaginous callus -> Bone remodeling",
+          "Hematoma formation -> Bony callus -> Fibrocartilaginous callus -> Remodeling"
         ],
         correct: 0,
         explanation: "Fracture repair begins with a fracture hematoma, followed by capillary invasion and a soft fibrocartilaginous callus, conversion to a woven bony callus, and remodeling into compact bone."
@@ -804,18 +799,16 @@
         counterText.textContent = `${skinMastered} / ${UNLOCK_THRESHOLD}`;
         boneDisplay.textContent = "🔒 Locked";
         boneDisplay.style.color = "#94a3b8";
-        document.getElementById("topicsCovered").textContent = "1 / 2";
       } else {
         banner.className = "tier-banner unlocked";
         statusText.innerHTML = `🔓 <strong>Stage 2: Comprehensive Mode</strong> (Both Integumentary & Skeletal Systems Active)`;
         counterText.textContent = "UNLOCKED";
         boneDisplay.textContent = `${boneMastered} / 25`;
         boneDisplay.style.color = "#38bdf8";
-        document.getElementById("topicsCovered").textContent = "2 / 2";
       }
     }
 
-    /* CURRENT ATTEMPT LOGIC */
+    /* ATTEMPT SAMPLER */
     let currentQuestions = [];
     let currentAnswers = {};
     let currentCorrectCount = 0;
@@ -826,7 +819,6 @@
       let picked = [];
 
       if (!unlocked) {
-        // Only sample from Chapter 5 (Integumentary: IDs 1-25)
         let skinQuestions = QUESTION_BANK.filter(q => q.chapter === 5);
         let unmasteredSkin = skinQuestions.filter(q => !mastered.includes(q.id));
 
@@ -839,7 +831,6 @@
           picked = unmasteredSkin.concat(skinQuestions.filter(q => !unmasteredSkin.includes(q))).slice(0, 10);
         }
       } else {
-        // Sample balanced 5 from Chapter 5 and 5 from Chapter 6
         [5, 6].forEach(ch => {
           let chQuestions = QUESTION_BANK.filter(q => q.chapter === ch);
           let unmastered = chQuestions.filter(q => !mastered.includes(q.id));
@@ -950,7 +941,7 @@
       document.getElementById("attemptScore").textContent = `${pct}%`;
     }
 
-    /* ANIMATED SCIENCE CONFETTI */
+    /* CONFETTI */
     const canvas = document.getElementById("confettiCanvas");
     const ctx = canvas.getContext("2d");
     let particles = [];
@@ -1057,7 +1048,7 @@
       }
     }
 
-    window.onload = startNewAttempt;
+    document.addEventListener("DOMContentLoaded", startNewAttempt);
   </script>
 </body>
 </html>
