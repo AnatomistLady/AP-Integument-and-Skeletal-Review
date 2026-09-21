@@ -270,7 +270,7 @@
   <div class="wrapper">
     <header>
       <h1>A&P 1 Unit 2 Mastery Engine</h1>
-      <div class="subtitle">OpenStax Anatomy & Physiology 2e • Chapters 5 & 6</div>
+      <div class="subtitle">OpenStax Anatomy & Physiology 2e • Chapters 5 & 6 (Live v4)</div>
     </header>
 
     <div id="bannerBox" class="banner locked">
@@ -307,16 +307,44 @@
       <span>Score: <span id="roundScore">0%</span></span>
     </div>
 
-    <div id="quizFeed" class="quiz-feed"></div>
+    <!-- INITIAL DIRECT FALLBACK QUESTIONS (Guaranteed to be visible) -->
+    <div id="quizFeed" class="quiz-feed">
+      <div class="q-box">
+        <div class="q-title"><span>Question 1 • <strong style="color:#38bdf8;">Ch 5: Epidermis</strong></span><span>1 pt</span></div>
+        <div class="q-main">
+          <div class="q-text">Which stratum of the epidermis consists of a single layer of cuboidal mitotically active stem cells that continuously generate new keratinocytes?</div>
+          <div class="options-group">
+            <div class="opt-item" onclick="handleStaticClick(this, true, 'expl_static_1')"><div class="opt-dot"></div><span>Stratum basale</span></div>
+            <div class="opt-item" onclick="handleStaticClick(this, false, 'expl_static_1')"><div class="opt-dot"></div><span>Stratum spinosum</span></div>
+            <div class="opt-item" onclick="handleStaticClick(this, false, 'expl_static_1')"><div class="opt-dot"></div><span>Stratum granulosum</span></div>
+            <div class="opt-item" onclick="handleStaticClick(this, false, 'expl_static_1')"><div class="opt-dot"></div><span>Stratum corneum</span></div>
+          </div>
+          <div id="expl_static_1" class="expl-banner"><strong>✓ Correct!</strong> The stratum basale (germinativum) is the deepest layer attached to the basement membrane containing dividing stem cells.</div>
+        </div>
+      </div>
+    </div>
 
     <div class="control-row">
-      <button class="btn-clear-mem" id="btnReset">Reset Progress</button>
-      <button class="btn-new-round" id="btnNewRound">Generate New 10-Q Quiz ↻</button>
+      <button class="btn-clear-mem" id="btnReset" onclick="resetAllProgress()">Reset Progress</button>
+      <button class="btn-new-round" id="btnNewRound" onclick="runDynamicQuiz()">Generate New 10-Q Quiz ↻</button>
     </div>
   </div>
 
   <script>
-    /* QUESTION DATABASE: 25 INTEGUMENTARY (IDs 1-25), 25 SKELETAL (IDs 26-50) */
+    function handleStaticClick(el, isCorrect, explId) {
+      const parent = el.parentElement;
+      Array.from(parent.children).forEach(c => c.classList.add('disabled'));
+      if (isCorrect) {
+        el.classList.add('picked-right');
+        document.getElementById(explId).className = 'expl-banner show-right';
+      } else {
+        el.classList.add('picked-wrong');
+        const expl = document.getElementById(explId);
+        expl.className = 'expl-banner show-wrong';
+        expl.innerHTML = '<strong>✗ Incorrect.</strong> The stratum basale is the active mitotic layer.';
+      }
+    }
+
     const BANK = [
       { id: 1, chapter: 5, category: "Ch 5: Epidermis", prompt: "Which stratum of the epidermis consists of a single layer of cuboidal mitotically active stem cells that continuously generate new keratinocytes?", options: ["Stratum basale", "Stratum spinosum", "Stratum granulosum", "Stratum corneum"], answer: "Stratum basale", expl: "The stratum basale (germinativum) is the deepest layer attached to the basement membrane containing dividing stem cells." },
       { id: 2, chapter: 5, category: "Ch 5: Epidermis", prompt: "Which epidermal layer is found exclusively in thick skin (palms and soles)?", options: ["Stratum lucidum", "Stratum spinosum", "Stratum granulosum", "Stratum corneum"], answer: "Stratum lucidum", expl: "The stratum lucidum is a smooth, translucent layer of dead cells present only in thick skin." },
@@ -376,57 +404,102 @@
       { id: 50, chapter: 6, category: "Ch 6: Classification", prompt: "The patella is classified as which specific bone type that develops inside a tendon to reduce friction?", options: ["Sesamoid bone", "Pneumatic bone", "Flat bone", "Irregular bone"], answer: "Sesamoid bone", expl: "Sesamoid bones form inside tendons near joints to optimize mechanical pull and minimize tendon wear." }
     ];
 
-    /* SAFE PROGRESSION TRACKING (localStorage with fallback) */
-    const STORAGE_TAG = "ap1_u2_clean_mastery";
-    let memoryMastered = [];
+    let sessionMastered = [];
+    let currentRoundQuestions = [];
+    let roundAnswers = {};
+    let roundCorrect = 0;
 
-    function readMastered() {
-      try {
-        const d = localStorage.getItem(STORAGE_TAG);
-        if (d) {
-          const arr = JSON.parse(d);
-          if (Array.isArray(arr)) return arr;
-        }
-      } catch (err) {}
-      return memoryMastered;
-    }
+    function runDynamicQuiz() {
+      const feed = document.getElementById("quizFeed");
+      feed.innerHTML = "";
 
-    function recordMastered(qid) {
-      let list = readMastered();
-      const hadUnlocked = checkUnlocked(list);
-      if (!list.includes(qid)) {
-        list.push(qid);
-        memoryMastered = list;
-        try {
-          localStorage.setItem(STORAGE_TAG, JSON.stringify(list));
-        } catch (err) {}
+      const skinCount = sessionMastered.filter(id => id <= 25).length;
+      const isUnlocked = (skinCount >= 20);
+
+      let pool = [];
+      if (!isUnlocked) {
+        pool = BANK.filter(q => q.chapter === 5).sort(() => Math.random() - 0.5).slice(0, 10);
+      } else {
+        const s5 = BANK.filter(q => q.chapter === 5).sort(() => Math.random() - 0.5).slice(0, 5);
+        const s6 = BANK.filter(q => q.chapter === 6).sort(() => Math.random() - 0.5).slice(0, 5);
+        pool = s5.concat(s6).sort(() => Math.random() - 0.5);
       }
-      const nowUnlocked = checkUnlocked(list);
-      if (!hadUnlocked && nowUnlocked) {
-        shootConfetti();
-        alert("🎉 Congratulations! You have mastered 20 Integumentary questions! The Skeletal System (Bone Biology) is now unlocked!");
-      }
-      refreshStats();
+
+      currentRoundQuestions = pool;
+      roundAnswers = {};
+      roundCorrect = 0;
+      updateUI();
+
+      currentRoundQuestions.forEach((q, idx) => {
+        const card = document.createElement("div");
+        card.className = "q-box";
+
+        const head = document.createElement("div");
+        head.className = "q-title";
+        head.innerHTML = "<span>Question " + (idx + 1) + " • <strong style='color:#38bdf8;'>" + q.category + "</strong></span><span>1 pt</span>";
+        card.appendChild(head);
+
+        const body = document.createElement("div");
+        body.className = "q-main";
+
+        const p = document.createElement("div");
+        p.className = "q-text";
+        p.textContent = q.prompt;
+        body.appendChild(p);
+
+        const og = document.createElement("div");
+        og.className = "options-group";
+
+        const expl = document.createElement("div");
+        expl.className = "expl-banner";
+
+        const opts = [...q.options].sort(() => Math.random() - 0.5);
+        opts.forEach(opt => {
+          const item = document.createElement("div");
+          item.className = "opt-item";
+          item.innerHTML = "<div class='opt-dot'></div><span>" + opt + "</span>";
+
+          item.onclick = function() {
+            if (roundAnswers[q.id] !== undefined) return;
+            roundAnswers[q.id] = opt;
+
+            Array.from(og.children).forEach(c => c.classList.add("disabled"));
+
+            if (opt === q.answer) {
+              roundCorrect++;
+              if (!sessionMastered.includes(q.id)) sessionMastered.push(q.id);
+              item.classList.add("picked-right");
+              expl.className = "expl-banner show-right";
+              expl.innerHTML = "<strong>✓ Correct!</strong> " + q.expl;
+              shootConfetti();
+            } else {
+              item.classList.add("picked-wrong");
+              expl.className = "expl-banner show-wrong";
+              expl.innerHTML = "<strong>✗ Incorrect.</strong> " + q.expl;
+            }
+            updateUI();
+          };
+          og.appendChild(item);
+        });
+
+        body.appendChild(og);
+        body.appendChild(expl);
+        card.appendChild(body);
+        feed.appendChild(card);
+      });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
-    function checkUnlocked(list) {
-      const skinCount = list.filter(id => id <= 25).length;
-      return skinCount >= 20;
-    }
+    function updateUI() {
+      const skinCount = sessionMastered.filter(id => id <= 25).length;
+      const boneCount = sessionMastered.filter(id => id > 25).length;
+      const totalCount = sessionMastered.length;
+      const isUnlocked = (skinCount >= 20);
 
-    function refreshStats() {
-      const list = readMastered();
-      const totalCount = BANK.length;
-      const masteredCount = list.length;
-      const skinCount = list.filter(id => id <= 25).length;
-      const boneCount = list.filter(id => id > 25).length;
-      const isUnlocked = checkUnlocked(list);
-
-      const pct = Math.round((masteredCount / totalCount) * 100);
-      document.getElementById("dashMastery").textContent = pct + "%";
-      document.getElementById("dashTotal").textContent = masteredCount + " / " + totalCount;
+      document.getElementById("dashTotal").textContent = totalCount + " / 50";
+      document.getElementById("dashMastery").textContent = Math.round((totalCount / 50) * 100) + "%";
       document.getElementById("dashSkin").textContent = skinCount + " / 25";
-      document.getElementById("dashBar").style.width = pct + "%";
+      document.getElementById("dashBar").style.width = Math.round((totalCount / 50) * 100) + "%";
 
       const bBox = document.getElementById("bannerBox");
       const bMsg = document.getElementById("bannerMsg");
@@ -446,246 +519,71 @@
         bStat.textContent = boneCount + " / 25";
         bStat.style.color = "#38bdf8";
       }
+
+      const ansCount = Object.keys(roundAnswers).length;
+      document.getElementById("roundProgress").textContent = ansCount + " / " + currentRoundQuestions.length;
+      document.getElementById("roundScore").textContent = (ansCount === 0 ? 0 : Math.round((roundCorrect / ansCount) * 100)) + "%";
     }
 
-    /* ROUND LOGIC (GENERATES 10 BALANCED QUESTIONS) */
-    let currentRoundQuestions = [];
-    let roundAnswers = {};
-    let roundCorrect = 0;
-
-    function pickQuestions() {
-      const list = readMastered();
-      const unlocked = checkUnlocked(list);
-      let selected = [];
-
-      if (!unlocked) {
-        // Only Chapter 5 (Skin: IDs 1-25)
-        let skinPool = BANK.filter(q => q.chapter === 5);
-        let unmastered = skinPool.filter(q => !list.includes(q.id)).sort(() => Math.random() - 0.5);
-        let mastered = skinPool.filter(q => list.includes(q.id)).sort(() => Math.random() - 0.5);
-        selected = unmastered.concat(mastered).slice(0, 10);
-      } else {
-        // 5 from Skin, 5 from Bone
-        [5, 6].forEach(ch => {
-          let pool = BANK.filter(q => q.chapter === ch);
-          let unmastered = pool.filter(q => !list.includes(q.id)).sort(() => Math.random() - 0.5);
-          let mastered = pool.filter(q => list.includes(q.id)).sort(() => Math.random() - 0.5);
-          selected = selected.concat(unmastered.concat(mastered).slice(0, 5));
-        });
+    function resetAllProgress() {
+      if (confirm("Reset current progress?")) {
+        sessionMastered = [];
+        runDynamicQuiz();
       }
-
-      return selected.sort(() => Math.random() - 0.5);
     }
 
-    function buildQuizDOM() {
-      currentRoundQuestions = pickQuestions();
-      roundAnswers = {};
-      roundCorrect = 0;
-      updateRoundStats();
-      refreshStats();
-
-      const feed = document.getElementById("quizFeed");
-      feed.innerHTML = "";
-
-      currentRoundQuestions.forEach((q, index) => {
-        const card = document.createElement("div");
-        card.className = "q-box";
-
-        const head = document.createElement("div");
-        head.className = "q-title";
-        head.innerHTML = "<span>Question " + (index + 1) + " • <strong style='color:#38bdf8;'>" + q.category + "</strong></span><span>1 pt</span>";
-        card.appendChild(head);
-
-        const body = document.createElement("div");
-        body.className = "q-main";
-
-        const text = document.createElement("div");
-        text.className = "q-text";
-        text.textContent = q.prompt;
-        body.appendChild(text);
-
-        const optsGroup = document.createElement("div");
-        optsGroup.className = "options-group";
-
-        const expl = document.createElement("div");
-        expl.className = "expl-banner";
-        expl.id = "expl_" + q.id;
-
-        // Scramble options
-        const shuffledOpts = [...q.options].sort(() => Math.random() - 0.5);
-
-        shuffledOpts.forEach(optText => {
-          const btn = document.createElement("div");
-          btn.className = "opt-item";
-
-          const dot = document.createElement("div");
-          dot.className = "opt-dot";
-
-          const label = document.createElement("span");
-          label.textContent = optText;
-
-          btn.appendChild(dot);
-          btn.appendChild(label);
-
-          btn.onclick = function() {
-            if (roundAnswers[q.id] !== undefined) return;
-            roundAnswers[q.id] = optText;
-
-            const isRight = (optText === q.answer);
-
-            // Lock row
-            Array.from(optsGroup.children).forEach(child => {
-              child.classList.add("disabled");
-              const childText = child.querySelector("span").textContent;
-              if (childText === q.answer) {
-                child.classList.add("picked-right");
-              } else if (childText === optText) {
-                child.classList.add("picked-wrong");
-              }
-            });
-
-            if (isRight) {
-              roundCorrect++;
-              recordMastered(q.id);
-              expl.className = "expl-banner show-right";
-              expl.innerHTML = "<strong>✓ Correct!</strong> " + q.expl;
-              shootConfetti();
-            } else {
-              expl.className = "expl-banner show-wrong";
-              expl.innerHTML = "<strong>✗ Incorrect.</strong> " + q.expl;
-            }
-
-            updateRoundStats();
-          };
-
-          optsGroup.appendChild(btn);
-        });
-
-        body.appendChild(optsGroup);
-        body.appendChild(expl);
-        card.appendChild(body);
-        feed.appendChild(card);
-      });
-
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-
-    function updateRoundStats() {
-      const answered = Object.keys(roundAnswers).length;
-      document.getElementById("roundProgress").textContent = answered + " / " + currentRoundQuestions.length;
-      const scorePct = answered === 0 ? 0 : Math.round((roundCorrect / answered) * 100);
-      document.getElementById("roundScore").textContent = scorePct + "%";
-    }
-
-    /* SCIENCE CONFETTI SYSTEM */
+    /* CONFETTI */
     const canvas = document.getElementById("confettiCanvas");
     const ctx = canvas.getContext("2d");
-    let confettiParts = [];
-    let confettiTimer = null;
+    let parts = [];
+    let timer = null;
 
-    function fitCanvas() {
+    function resizeCanvas() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     }
-    window.addEventListener("resize", fitCanvas);
-    fitCanvas();
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
 
     function shootConfetti() {
       const colors = ["#38bdf8", "#4ade80", "#facc15", "#fb923c", "#c084fc", "#22d3ee"];
-      const shapes = ["atom", "dna", "ring", "spark"];
-
-      for (let i = 0; i < 40; i++) {
-        confettiParts.push({
+      for (let i = 0; i < 35; i++) {
+        parts.push({
           x: window.innerWidth / 2 + (Math.random() * 200 - 100),
-          y: window.innerHeight * 0.35 + (Math.random() * 80 - 40),
-          vx: (Math.random() - 0.5) * 12,
-          vy: Math.random() * -10 - 4,
-          size: Math.random() * 10 + 8,
+          y: window.innerHeight * 0.35 + (Math.random() * 60 - 30),
+          vx: (Math.random() - 0.5) * 10,
+          vy: Math.random() * -8 - 3,
+          size: Math.random() * 8 + 6,
           color: colors[Math.floor(Math.random() * colors.length)],
-          shape: shapes[Math.floor(Math.random() * shapes.length)],
-          rot: Math.random() * 6.28,
-          vrot: (Math.random() - 0.5) * 0.2,
           alpha: 1
         });
       }
-
-      if (!confettiTimer) {
-        animateConfetti();
-      }
+      if (!timer) animateConfetti();
     }
 
     function animateConfetti() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      for (let i = confettiParts.length - 1; i >= 0; i--) {
-        const p = confettiParts[i];
+      for (let i = parts.length - 1; i >= 0; i--) {
+        const p = parts[i];
         p.x += p.vx;
         p.y += p.vy;
         p.vy += 0.35;
-        p.rot += p.vrot;
-        p.alpha -= 0.015;
+        p.alpha -= 0.02;
 
-        ctx.save();
-        ctx.translate(p.x, p.y);
-        ctx.rotate(p.rot);
-        ctx.globalAlpha = Math.max(p.alpha, 0);
-        ctx.strokeStyle = p.color;
         ctx.fillStyle = p.color;
-        ctx.lineWidth = 2;
+        ctx.globalAlpha = Math.max(p.alpha, 0);
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size / 2, 0, Math.PI * 2);
+        ctx.fill();
 
-        if (p.shape === "ring") {
-          ctx.beginPath();
-          for (let s = 0; s < 6; s++) {
-            const a = (s * Math.PI) / 3;
-            const hx = Math.cos(a) * (p.size / 2);
-            const hy = Math.sin(a) * (p.size / 2);
-            if (s === 0) ctx.moveTo(hx, hy);
-            else ctx.lineTo(hx, hy);
-          }
-          ctx.closePath();
-          ctx.stroke();
-        } else if (p.shape === "atom") {
-          ctx.beginPath();
-          ctx.ellipse(0, 0, p.size / 2, p.size / 5, Math.PI / 4, 0, Math.PI * 2);
-          ctx.ellipse(0, 0, p.size / 2, p.size / 5, -Math.PI / 4, 0, Math.PI * 2);
-          ctx.stroke();
-        } else if (p.shape === "dna") {
-          ctx.beginPath();
-          ctx.moveTo(-p.size / 2, -p.size / 3);
-          ctx.lineTo(p.size / 2, -p.size / 3);
-          ctx.moveTo(-p.size / 2, p.size / 3);
-          ctx.lineTo(p.size / 2, p.size / 3);
-          ctx.stroke();
-        } else {
-          ctx.fillRect(-p.size / 4, -p.size / 4, p.size / 2, p.size / 2);
-        }
-
-        ctx.restore();
-
-        if (p.alpha <= 0 || p.y > canvas.height) {
-          confettiParts.splice(i, 1);
-        }
+        if (p.alpha <= 0 || p.y > canvas.height) parts.splice(i, 1);
       }
-
-      if (confettiParts.length > 0) {
-        confettiTimer = requestAnimationFrame(animateConfetti);
-      } else {
-        confettiTimer = null;
-      }
+      if (parts.length > 0) timer = requestAnimationFrame(animateConfetti);
+      else timer = null;
     }
 
-    // Attach control buttons
-    document.getElementById("btnNewRound").onclick = buildQuizDOM;
-    document.getElementById("btnReset").onclick = function() {
-      if (confirm("Reset all mastered question history for Unit 2?")) {
-        memoryMastered = [];
-        try { localStorage.removeItem(STORAGE_TAG); } catch (err) {}
-        buildQuizDOM();
-      }
-    };
-
-    // Run first round
-    buildQuizDOM();
+    // Immediately run the dynamic 10-question set
+    runDynamicQuiz();
   </script>
 </body>
 </html>
