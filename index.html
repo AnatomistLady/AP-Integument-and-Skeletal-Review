@@ -320,13 +320,13 @@
     <div class="subhead">OpenStax Anatomy & Physiology 2e • Chapters 5 & 6 (Unlock Progression)</div>
   </header>
 
-  <!-- PROGRESSION LOCK / UNLOCK BANNER -->
+  <!-- PROGRESSION BANNER -->
   <div id="tierBanner" class="tier-banner locked">
     <span id="tierStatusText">🔒 <strong>Stage 1: Integumentary System</strong> (Master 20/25 to unlock Bone Biology)</span>
     <span id="tierCounterText">0 / 20</span>
   </div>
 
-  <!-- PERSISTENT MASTERY DASHBOARD -->
+  <!-- PERSISTENT DASHBOARD -->
   <div class="dashboard-panel">
     <div class="dash-grid">
       <div class="dash-box">
@@ -351,7 +351,7 @@
     </div>
   </div>
 
-  <!-- CURRENT ATTEMPT STATS -->
+  <!-- ATTEMPT STATS -->
   <div class="attempt-panel">
     <span>Current Quiz: <span id="attemptProgress">0 / 10</span></span>
     <span>Score: <span id="attemptScore">0%</span></span>
@@ -368,7 +368,6 @@
     const UNLOCK_THRESHOLD = 20;
 
     const QUESTION_BANK = [
-      /* CHAPTER 5: INTEGUMENTARY (1 - 25) */
       {
         id: 1, chapter: 5, chapName: "Ch 5: Epidermal Strata",
         prompt: "Which stratum of the epidermis consists of a single layer of cuboidal mitotically active stem cells that continuously generate new keratinocytes?",
@@ -728,14 +727,17 @@
       }
     ];
 
-    /* PERSISTENT MASTERY ENGINE (localStorage) */
-    const STORAGE_KEY = "ap1_unit2_progressive_mastery";
+    /* SAFE STORAGE ENGINE */
+    const STORAGE_KEY = "ap1_unit2_v3_mastery";
 
     function getMasteredIDs() {
       try {
         const stored = localStorage.getItem(STORAGE_KEY);
-        return stored ? JSON.parse(stored) : [];
+        if (!stored) return [];
+        const parsed = JSON.parse(stored);
+        return Array.isArray(parsed) ? parsed : [];
       } catch (e) {
+        localStorage.removeItem(STORAGE_KEY);
         return [];
       }
     }
@@ -746,7 +748,9 @@
 
       if (!mastered.includes(id)) {
         mastered.push(id);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(mastered));
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(mastered));
+        } catch (e) {}
       }
 
       const nowUnlocked = isBoneUnlocked(mastered);
@@ -765,7 +769,9 @@
 
     function clearSavedMastery() {
       if (confirm("Reset all mastered question history for Unit 2?")) {
-        localStorage.removeItem(STORAGE_KEY);
+        try {
+          localStorage.removeItem(STORAGE_KEY);
+        } catch (e) {}
         updateDashboard();
         startNewAttempt();
       }
@@ -941,7 +947,7 @@
       document.getElementById("attemptScore").textContent = `${pct}%`;
     }
 
-    /* CONFETTI */
+    /* ANIMATED SCIENCE CONFETTI */
     const canvas = document.getElementById("confettiCanvas");
     const ctx = canvas.getContext("2d");
     let particles = [];
@@ -1048,7 +1054,8 @@
       }
     }
 
-    document.addEventListener("DOMContentLoaded", startNewAttempt);
+    // Direct synchronous execution to ensure immediate render
+    startNewAttempt();
   </script>
 </body>
 </html>
