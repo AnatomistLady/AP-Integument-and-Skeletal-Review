@@ -2,304 +2,256 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>A&P 1 Unit 2 Progressive Mastery Engine</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A&P 1 Unit 2 Mastery Engine</title>
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      -webkit-tap-highlight-color: transparent;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
     body {
-      background-color: #0f172a;
+      background: #0f172a;
       color: #f1f5f9;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      min-height: 100vh;
-      padding: 18px 12px 64px;
+      padding: 16px 12px 60px;
     }
-
-    header {
+    .wrapper {
       width: 100%;
       max-width: 720px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    header {
       background: #1e293b;
       border: 1px solid #334155;
       border-top: 4px solid #38bdf8;
-      border-radius: 12px;
-      padding: 18px 20px;
-      margin-bottom: 16px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+      border-radius: 10px;
+      padding: 16px;
     }
     h1 {
-      font-size: 1.3rem;
-      font-weight: 700;
+      font-size: 1.25rem;
       color: #f8fafc;
-      letter-spacing: -0.2px;
+      font-weight: 700;
     }
-    .subhead {
-      font-size: 0.85rem;
+    .subtitle {
+      font-size: 0.82rem;
       color: #94a3b8;
-      margin-top: 5px;
+      margin-top: 4px;
     }
-
-    /* PROGRESSION BANNER */
-    .tier-banner {
-      width: 100%;
-      max-width: 720px;
-      border-radius: 10px;
-      padding: 12px 16px;
-      margin-bottom: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 0.88rem;
+    .banner {
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 0.85rem;
       font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       border: 1px solid transparent;
     }
-    .tier-banner.locked {
+    .banner.locked {
       background: #1e1e38;
       border-color: #4338ca;
       color: #c7d2fe;
     }
-    .tier-banner.unlocked {
+    .banner.unlocked {
       background: #064e3b;
       border-color: #10b981;
       color: #ecfdf5;
     }
-
-    /* DASHBOARD */
-    .dashboard-panel {
-      width: 100%;
-      max-width: 720px;
+    .dashboard {
       background: #1e293b;
       border: 1px solid #334155;
-      border-radius: 12px;
-      padding: 16px 18px;
-      margin-bottom: 16px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+      border-radius: 10px;
+      padding: 14px;
     }
-    .dash-grid {
+    .stat-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
+      gap: 8px;
+      margin-bottom: 10px;
       text-align: center;
-      margin-bottom: 12px;
     }
-    .dash-box {
-      display: flex;
-      flex-direction: column;
+    .stat-card {
       background: #0f172a;
-      padding: 10px 6px;
-      border-radius: 8px;
       border: 1px solid #334155;
-    }
-    .dash-label {
-      font-size: 0.68rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      color: #94a3b8;
-      letter-spacing: 0.5px;
-    }
-    .dash-val {
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: #38bdf8;
-      margin-top: 3px;
-    }
-    .progress-bar-bg {
-      width: 100%;
-      height: 10px;
-      background: #334155;
       border-radius: 6px;
+      padding: 8px 4px;
+    }
+    .stat-label {
+      font-size: 0.65rem;
+      color: #94a3b8;
+      text-transform: uppercase;
+      font-weight: 700;
+      display: block;
+    }
+    .stat-val {
+      font-size: 1.05rem;
+      color: #38bdf8;
+      font-weight: 800;
+      margin-top: 2px;
+    }
+    .bar-bg {
+      background: #334155;
+      height: 8px;
+      border-radius: 4px;
       overflow: hidden;
     }
-    .progress-bar-fill {
+    .bar-fill {
       height: 100%;
       background: linear-gradient(90deg, #38bdf8, #22c55e);
       width: 0%;
-      transition: width 0.3s ease;
+      transition: width 0.3s;
     }
-
-    /* ATTEMPT PANEL */
-    .attempt-panel {
-      width: 100%;
-      max-width: 720px;
+    .round-status {
       background: #032b43;
       border: 1px solid #0284c7;
-      border-radius: 10px;
-      padding: 10px 16px;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #e0f2fe;
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-      font-size: 0.88rem;
-      font-weight: 600;
-      color: #e0f2fe;
     }
-
-    /* QUIZ QUESTIONS */
-    .quiz-container {
-      width: 100%;
-      max-width: 720px;
+    .quiz-feed {
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 14px;
     }
-    .q-card {
+    .q-box {
       background: #1e293b;
       border: 1px solid #334155;
-      border-radius: 12px;
+      border-radius: 10px;
       overflow: hidden;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
     }
-    .q-header {
+    .q-title {
       background: #0f172a;
       border-bottom: 1px solid #334155;
-      padding: 12px 18px;
+      padding: 10px 14px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #94a3b8;
       display: flex;
       justify-content: space-between;
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: #94a3b8;
     }
-    .q-body {
-      padding: 18px;
+    .q-main {
+      padding: 16px;
     }
-    .q-prompt {
-      font-size: 1rem;
+    .q-text {
+      font-size: 0.98rem;
       font-weight: 600;
-      line-height: 1.5;
+      line-height: 1.45;
       color: #f8fafc;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
-
-    /* OPTIONS */
-    .options-list {
+    .options-group {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
     }
-    .opt-btn {
-      width: 100%;
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
+    .opt-item {
       background: #0f172a;
       border: 1px solid #334155;
-      border-radius: 8px;
-      padding: 12px 16px;
-      font-size: 0.92rem;
-      line-height: 1.45;
-      font-weight: 400;
+      border-radius: 6px;
+      padding: 12px 14px;
+      font-size: 0.9rem;
       color: #e2e8f0;
       cursor: pointer;
-      text-align: left;
-      transition: background 0.15s, border-color 0.15s;
-      user-select: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: background 0.1s;
     }
-    .opt-btn:hover:not(.locked) {
+    .opt-item:hover:not(.disabled) {
       background: #1e293b;
       border-color: #38bdf8;
     }
-    .radio-circle {
-      width: 18px;
-      height: 18px;
-      min-width: 18px;
+    .opt-dot {
+      width: 16px;
+      height: 16px;
+      min-width: 16px;
       border: 2px solid #64748b;
       border-radius: 50%;
-      margin-top: 2px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
-
-    /* FEEDBACK EVALUATION */
-    .opt-btn.correct-choice {
+    .opt-item.picked-right {
       background: #064e3b !important;
-      border: 2px solid #10b981 !important;
+      border-color: #10b981 !important;
       color: #ecfdf5 !important;
-      font-weight: 600;
     }
-    .opt-btn.correct-choice .radio-circle {
-      border-color: #10b981;
+    .opt-item.picked-right .opt-dot {
       background: #10b981;
+      border-color: #10b981;
     }
-    .opt-btn.wrong-choice {
+    .opt-item.picked-wrong {
       background: #7f1d1d !important;
-      border: 2px solid #ef4444 !important;
+      border-color: #ef4444 !important;
       color: #fef2f2 !important;
-      font-weight: 600;
     }
-    .opt-btn.wrong-choice .radio-circle {
-      border-color: #ef4444;
+    .opt-item.picked-wrong .opt-dot {
       background: #ef4444;
+      border-color: #ef4444;
     }
-    .opt-btn.locked {
+    .opt-item.disabled {
       cursor: default;
     }
-
-    .feedback-box {
-      margin-top: 14px;
-      padding: 12px 16px;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      line-height: 1.5;
+    .expl-banner {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      line-height: 1.4;
       display: none;
     }
-    .feedback-box.correct {
+    .expl-banner.show-right {
       display: block;
       background: rgba(16, 185, 129, 0.15);
       border: 1px solid #10b981;
       color: #a7f3d0;
     }
-    .feedback-box.incorrect {
+    .expl-banner.show-wrong {
       display: block;
       background: rgba(239, 68, 68, 0.15);
       border: 1px solid #ef4444;
       color: #fca5a5;
     }
-
-    /* CONTROLS */
-    .action-row {
-      width: 100%;
-      max-width: 720px;
-      margin-top: 24px;
+    .control-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-top: 10px;
     }
-    .btn-new {
+    .btn-new-round {
       background: #0284c7;
       color: #ffffff;
       border: 1px solid #38bdf8;
-      padding: 12px 24px;
-      border-radius: 8px;
-      font-size: 0.95rem;
-      font-weight: 600;
+      border-radius: 6px;
+      padding: 12px 20px;
+      font-size: 0.92rem;
+      font-weight: 700;
       cursor: pointer;
-      box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3);
     }
-    .btn-new:hover {
+    .btn-new-round:hover {
       background: #0369a1;
     }
-    .btn-reset-data {
+    .btn-clear-mem {
       background: transparent;
-      color: #64748b;
       border: 1px solid #334155;
-      padding: 8px 14px;
+      color: #64748b;
       border-radius: 6px;
-      font-size: 0.78rem;
+      padding: 6px 10px;
+      font-size: 0.72rem;
       cursor: pointer;
-      font-weight: 500;
     }
-    .btn-reset-data:hover {
+    .btn-clear-mem:hover {
       color: #ef4444;
       border-color: #ef4444;
     }
-
     #confettiCanvas {
       position: fixed;
       top: 0;
@@ -315,672 +267,349 @@
 
   <canvas id="confettiCanvas"></canvas>
 
-  <header>
-    <h1>A&P 1 Unit 2 Progressive Mastery Engine</h1>
-    <div class="subhead">OpenStax Anatomy & Physiology 2e • Chapters 5 & 6 (Unlock Progression)</div>
-  </header>
+  <div class="wrapper">
+    <header>
+      <h1>A&P 1 Unit 2 Mastery Engine</h1>
+      <div class="subtitle">OpenStax Anatomy & Physiology 2e • Chapters 5 & 6</div>
+    </header>
 
-  <!-- PROGRESSION BANNER -->
-  <div id="tierBanner" class="tier-banner locked">
-    <span id="tierStatusText">🔒 <strong>Stage 1: Integumentary System</strong> (Master 20/25 to unlock Bone Biology)</span>
-    <span id="tierCounterText">0 / 20</span>
-  </div>
+    <div id="bannerBox" class="banner locked">
+      <span id="bannerMsg">🔒 <strong>Stage 1: Integumentary System</strong> (Master 20/25 to unlock Bone Biology)</span>
+      <span id="bannerCounter">0 / 20</span>
+    </div>
 
-  <!-- PERSISTENT DASHBOARD -->
-  <div class="dashboard-panel">
-    <div class="dash-grid">
-      <div class="dash-box">
-        <span class="dash-label">Bank Mastery</span>
-        <span id="masteryPct" class="dash-val">0%</span>
+    <div class="dashboard">
+      <div class="stat-grid">
+        <div class="stat-card">
+          <span class="stat-label">Mastery</span>
+          <span id="dashMastery" class="stat-val">0%</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Mastered</span>
+          <span id="dashTotal" class="stat-val">0 / 50</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Skin</span>
+          <span id="dashSkin" class="stat-val">0 / 25</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Bone</span>
+          <span id="dashBone" class="stat-val">🔒 Locked</span>
+        </div>
       </div>
-      <div class="dash-box">
-        <span class="dash-label">Mastered</span>
-        <span id="masteredCount" class="dash-val">0 / 50</span>
-      </div>
-      <div class="dash-box">
-        <span class="dash-label">Skin Mastered</span>
-        <span id="skinMasteredCount" class="dash-val">0 / 25</span>
-      </div>
-      <div class="dash-box">
-        <span class="dash-label">Bone Mastered</span>
-        <span id="boneMasteredCount" class="dash-val">🔒 Locked</span>
+      <div class="bar-bg">
+        <div id="dashBar" class="bar-fill"></div>
       </div>
     </div>
-    <div class="progress-bar-bg">
-      <div id="masteryBar" class="progress-bar-fill"></div>
+
+    <div class="round-status">
+      <span>Current Quiz: <span id="roundProgress">0 / 10</span></span>
+      <span>Score: <span id="roundScore">0%</span></span>
     </div>
-  </div>
 
-  <!-- ATTEMPT STATS -->
-  <div class="attempt-panel">
-    <span>Current Quiz: <span id="attemptProgress">0 / 10</span></span>
-    <span>Score: <span id="attemptScore">0%</span></span>
-  </div>
+    <div id="quizFeed" class="quiz-feed"></div>
 
-  <div class="quiz-container" id="quizContainer"></div>
-
-  <div class="action-row">
-    <button class="btn-reset-data" onclick="clearSavedMastery()">Reset Mastered History</button>
-    <button class="btn-new" onclick="startNewAttempt()">Generate New 10-Q Quiz ↻</button>
+    <div class="control-row">
+      <button class="btn-clear-mem" id="btnReset">Reset Progress</button>
+      <button class="btn-new-round" id="btnNewRound">Generate New 10-Q Quiz ↻</button>
+    </div>
   </div>
 
   <script>
-    const UNLOCK_THRESHOLD = 20;
+    /* QUESTION DATABASE: 25 INTEGUMENTARY (IDs 1-25), 25 SKELETAL (IDs 26-50) */
+    const BANK = [
+      { id: 1, chapter: 5, category: "Ch 5: Epidermis", prompt: "Which stratum of the epidermis consists of a single layer of cuboidal mitotically active stem cells that continuously generate new keratinocytes?", options: ["Stratum basale", "Stratum spinosum", "Stratum granulosum", "Stratum corneum"], answer: "Stratum basale", expl: "The stratum basale (germinativum) is the deepest layer attached to the basement membrane containing dividing stem cells." },
+      { id: 2, chapter: 5, category: "Ch 5: Epidermis", prompt: "Which epidermal layer is found exclusively in thick skin (palms and soles)?", options: ["Stratum lucidum", "Stratum spinosum", "Stratum granulosum", "Stratum corneum"], answer: "Stratum lucidum", expl: "The stratum lucidum is a smooth, translucent layer of dead cells present only in thick skin." },
+      { id: 3, chapter: 5, category: "Ch 5: Epidermal Cells", prompt: "Which dendritic cells reside in the stratum spinosum and function as antigen-presenting macrophages?", options: ["Langerhans cells", "Merkel cells", "Melanocytes", "Fibroblasts"], answer: "Langerhans cells", expl: "Langerhans cells are immune sentinels that phagocytize pathogens and activate defensive immune responses." },
+      { id: 4, chapter: 5, category: "Ch 5: Pigmentation", prompt: "The primary pigment synthesized in basal cells to shield nuclear DNA from UV radiation is:", options: ["Melanin", "Carotene", "Hemoglobin", "Keratohyalin"], answer: "Melanin", expl: "Melanin is transferred to keratinocytes to form a protective umbrella over nuclear DNA." },
+      { id: 5, chapter: 5, category: "Ch 5: Sensation", prompt: "Which sensory receptor cells in the stratum basale detect light touch and texture?", options: ["Merkel cells", "Pacinian corpuscles", "Meissner corpuscles", "Ruffini endings"], answer: "Merkel cells", expl: "Merkel cells connect with sensory nerve endings in the epidermis to perceive light touch." },
+      { id: 6, chapter: 5, category: "Ch 5: Dermis", prompt: "The superficial 20% of the dermis made of loose areolar connective tissue with dermal papillae is the:", options: ["Papillary layer", "Reticular layer", "Hypodermis", "Stratum basale"], answer: "Papillary layer", expl: "The papillary layer contains loose areolar connective tissue, capillary loops, and defensive cells." },
+      { id: 7, chapter: 5, category: "Ch 5: Dermis", prompt: "The deep 80% of the dermis composed of dense irregular connective tissue with prominent collagen bundles is the:", options: ["Reticular layer", "Papillary layer", "Subcutaneous layer", "Epidermal stratum corneum"], answer: "Reticular layer", expl: "The reticular dermis contains thick dense irregular collagen networks providing high tensile strength." },
+      { id: 8, chapter: 5, category: "Ch 5: Hypodermis", prompt: "The subcutaneous layer underlying the dermis that stores adipose tissue and anchors skin to fascia is the:", options: ["Hypodermis", "Reticular dermis", "Stratum basale", "Papillary layer"], answer: "Hypodermis", expl: "The hypodermis (superficial fascia) insulates the body and anchors the skin to underlying muscle." },
+      { id: 9, chapter: 5, category: "Ch 5: Cutaneous Glands", prompt: "Exocrine glands that release an oily secretion (sebum) via holocrine secretion into hair follicles are:", options: ["Sebaceous glands", "Eccrine sweat glands", "Apocrine sweat glands", "Ceruminous glands"], answer: "Sebaceous glands", expl: "Sebaceous glands rupture entire cells to lubricate hair and skin with lipid-rich sebum." },
+      { id: 10, chapter: 5, category: "Ch 5: Cutaneous Glands", prompt: "Coiled tubular glands distributed across the body that produce watery perspiration for thermoregulation are:", options: ["Eccrine sweat glands", "Apocrine sweat glands", "Sebaceous glands", "Ceruminous glands"], answer: "Eccrine sweat glands", expl: "Eccrine sweat glands secrete a watery electrolyte solution directly onto the skin surface to cool the body." },
+      { id: 11, chapter: 5, category: "Ch 5: Cutaneous Glands", prompt: "Which large sweat glands become active at puberty in the axillary and groin areas, causing body odor upon bacterial breakdown?", options: ["Apocrine sweat glands", "Eccrine sweat glands", "Holocrine glands", "Mammary glands"], answer: "Apocrine sweat glands", expl: "Apocrine glands empty viscous organic secretions into hair follicles that produce odor when bacteria feed on them." },
+      { id: 12, chapter: 5, category: "Ch 5: Sensation", prompt: "Large, encapsulated sensory receptors deep in the dermis and hypodermis that detect deep pressure and vibration are:", options: ["Pacinian corpuscles", "Meissner corpuscles", "Merkel discs", "Free nerve endings"], answer: "Pacinian corpuscles", expl: "Pacinian (lamellar) corpuscles are onion-like mechanoreceptors tuned to deep pressure and vibration." },
+      { id: 13, chapter: 5, category: "Ch 5: Hair Anatomy", prompt: "The bundle of smooth muscle attached to a hair follicle that causes goosebumps upon contraction is the:", options: ["Arrector pili", "Bulbous rectus", "Orbicularis cutis", "Follicular sphincter"], answer: "Arrector pili", expl: "The arrector pili contracts under sympathetic stimulation to pull hair shafts perpendicular to skin." },
+      { id: 14, chapter: 5, category: "Ch 5: Metabolic Functions", prompt: "Keratinocytes use solar UV radiation to convert a cholesterol derivative into cholecalciferol, the precursor to:", options: ["Vitamin D", "Melatonin", "Keratin", "Vitamin A"], answer: "Vitamin D", expl: "Cholecalciferol is synthesized in the skin and modified by the liver and kidneys into active Vitamin D." },
+      { id: 15, chapter: 5, category: "Ch 5: Keratinization", prompt: "In which epidermal layer do cells begin dying, accumulate keratohyalin, and release water-proofing glycolipids?", options: ["Stratum granulosum", "Stratum basale", "Stratum spinosum", "Stratum lucidum"], answer: "Stratum granulosum", expl: "In the stratum granulosum, keratinocytes disintegrate their nuclei and produce water-resistant glycolipid seals." },
+      { id: 16, chapter: 5, category: "Ch 5: Clinical Burns", prompt: "A burn injury damaging the entire epidermis and upper dermis, marked by localized pain, erythema, and blisters, is a:", options: ["Second-degree burn", "First-degree burn", "Third-degree burn", "Fourth-degree burn"], answer: "Second-degree burn", expl: "Second-degree burns penetrate into the dermis, causing fluid blisters between the epidermis and dermis." },
+      { id: 17, chapter: 5, category: "Ch 5: Oncology", prompt: "The most dangerous form of skin cancer, originating from pigment-producing cells and tracked by ABCDE rules, is:", options: ["Melanoma", "Basal cell carcinoma", "Squamous cell carcinoma", "Kaposi sarcoma"], answer: "Melanoma", expl: "Melanoma arises from melanocytes and has high potential for metastasis." },
+      { id: 18, chapter: 5, category: "Ch 5: Dermis", prompt: "Predominant directional orientations of collagen bundles in the reticular dermis followed by surgeons are:", options: ["Cleavage lines", "Friction ridges", "Flexure lines", "Dermal papillae"], answer: "Cleavage lines", expl: "Cleavage (Langer) lines represent dermal collagen alignment; incisions parallel to them heal with less scarring." },
+      { id: 19, chapter: 5, category: "Ch 5: Nails", prompt: "The actively growing proximal thickened portion of the nail bed responsible for nail growth is the:", options: ["Nail matrix", "Hyponychium", "Eponychium", "Lunula"], answer: "Nail matrix", expl: "The nail matrix contains dividing epithelial cells that produce the keratinized nail plate." },
+      { id: 20, chapter: 5, category: "Ch 5: Nails", prompt: "The fold of stratum corneum projecting onto the proximal edge of the nail body (the cuticle) is the:", options: ["Eponychium", "Hyponychium", "Perionychium", "Lunula"], answer: "Eponychium", expl: "The eponychium (cuticle) seals the junction between the digit skin and the emerging nail body." },
+      { id: 21, chapter: 5, category: "Ch 5: Thermoregulation", prompt: "When body temperature rises, dermal blood vessels respond by ________ to release heat to the environment.", options: ["Dilating (vasodilation)", "Constricting (vasoconstriction)", "Clotting", "Collapsing"], answer: "Dilating (vasodilation)", expl: "Dermal arterioles dilate to send warm blood closer to the skin surface for radiant heat loss." },
+      { id: 22, chapter: 5, category: "Ch 5: Epidermis", prompt: "Which cell junctions tightly connect adjacent keratinocytes in the stratum spinosum, causing a spiny histological look?", options: ["Desmosomes", "Gap junctions", "Tight junctions", "Hemidesmosomes"], answer: "Desmosomes", expl: "Desmosomes are anchoring junctions that bridge neighboring intermediate filaments together." },
+      { id: 23, chapter: 5, category: "Ch 5: Glands", prompt: "Modified apocrine sweat glands in the external ear canal that secrete earwax are:", options: ["Ceruminous glands", "Mammary glands", "Sebaceous glands", "Eccrine glands"], answer: "Ceruminous glands", expl: "Ceruminous glands secrete earwax (cerumen) to trap dirt and insects entering the ear canal." },
+      { id: 24, chapter: 5, category: "Ch 5: Epidermis", prompt: "The outermost layer of 20 to 30 layers of dead, flattened keratinized cells that continuously slough off is the:", options: ["Stratum corneum", "Stratum granulosum", "Stratum spinosum", "Stratum lucidum"], answer: "Stratum corneum", expl: "The stratum corneum is the durable, keratin-filled protective outer barrier of the skin." },
+      { id: 25, chapter: 5, category: "Ch 5: Clinical Pathology", prompt: "An autoimmune disease where rapid epidermal proliferation causes thick, silvery scaly plaques on red skin is:", options: ["Psoriasis", "Eczema", "Basal cell carcinoma", "Alopecia"], answer: "Psoriasis", expl: "Psoriasis results from hyperactive immune signaling driving keratinocytes to divide too quickly." },
 
-    const QUESTION_BANK = [
-      {
-        id: 1, chapter: 5, chapName: "Ch 5: Epidermal Strata",
-        prompt: "Which stratum of the epidermis consists of a single layer of cuboidal mitotically active stem cells that continuously generate new keratinocytes?",
-        options: ["Stratum basale", "Stratum spinosum", "Stratum granulosum", "Stratum corneum"],
-        correct: 0,
-        explanation: "The stratum basale (stratum germinativum) is the deepest epidermal layer attached to the basement membrane, containing active stem cells that undergo mitosis."
-      },
-      {
-        id: 2, chapter: 5, chapName: "Ch 5: Thick Skin",
-        prompt: "Which epidermal layer is found exclusively in thick skin (palms of the hands and soles of the feet)?",
-        options: ["Stratum lucidum", "Stratum spinosum", "Stratum granulosum", "Stratum corneum"],
-        correct: 0,
-        explanation: "The stratum lucidum is a clear, thin, translucent layer of flattened, dead keratinocytes located between the stratum granulosum and stratum corneum only in thick skin."
-      },
-      {
-        id: 3, chapter: 5, chapName: "Ch 5: Epidermal Cells",
-        prompt: "Which dendritic cells reside in the stratum spinosum and function as antigen-presenting macrophages to defend against cutaneous pathogens?",
-        options: ["Langerhans cells (intraepidermal macrophages)", "Merkel cells", "Melanocytes", "Fibroblasts"],
-        correct: 0,
-        explanation: "Langerhans cells (epidermal dendritic cells) are specialized immune sentinels that ingest microbes and migrate to lymph nodes to activate immune responses."
-      },
-      {
-        id: 4, chapter: 5, chapName: "Ch 5: Pigmentation",
-        prompt: "The primary pigment synthesized in specialized basal cells that transfers melanosomes to keratinocytes to shield nuclear DNA from ultraviolet (UV) radiation is:",
-        options: ["Melanin", "Carotene", "Hemoglobin", "Keratohyalin"],
-        correct: 0,
-        explanation: "Melanin is synthesized by melanocytes in the stratum basale and packaged into melanosomes, which form protective umbrellas over the nuclei of keratinocytes."
-      },
-      {
-        id: 5, chapter: 5, chapName: "Ch 5: Cutaneous Sensation",
-        prompt: "Which sensory receptor cells in the stratum basale are coupled with sensory nerve endings to detect light touch and texture?",
-        options: ["Merkel cells (tactile cells)", "Pacinian corpuscles", "Meissner corpuscles", "Ruffini endings"],
-        correct: 0,
-        explanation: "Merkel (tactile) cells are located in the deepest epidermal layer and associate with sensory nerve endings (tactile discs) to sense light touch."
-      },
-      {
-        id: 6, chapter: 5, chapName: "Ch 5: Dermal Layers",
-        prompt: "The superficial 20% of the dermis composed of loose areolar connective tissue with dermal papillae projecting into the epidermis is the:",
-        options: ["Papillary layer", "Reticular layer", "Hypodermis", "Stratum basale"],
-        correct: 0,
-        explanation: "The papillary layer of the dermis consists of areolar connective tissue containing capillary loops, tactile receptors, and dermal papillae that form friction ridges."
-      },
-      {
-        id: 7, chapter: 5, chapName: "Ch 5: Dermal Layers",
-        prompt: "The deep, thicker layer of the dermis composed of dense irregular connective tissue with prominent interlocking bundles of collagen and elastic fibers is the:",
-        options: ["Reticular layer", "Papillary layer", "Subcutaneous layer", "Epidermal stratum corneum"],
-        correct: 0,
-        explanation: "The reticular layer comprises ~80% of dermal thickness and consists of dense irregular connective tissue providing multidirectional tensile strength and elasticity."
-      },
-      {
-        id: 8, chapter: 5, chapName: "Ch 5: Subcutaneous Layer",
-        prompt: "The subcutaneous layer underlying the dermis that anchors skin to fascia and serves as a major site for adipose energy storage is the:",
-        options: ["Hypodermis (superficial fascia)", "Reticular dermis", "Stratum basale", "Papillary layer"],
-        correct: 0,
-        explanation: "The hypodermis (subcutaneous layer) is not technically part of the skin; it consists of areolar and adipose connective tissue that insulates and cushions underlying muscle and bone."
-      },
-      {
-        id: 9, chapter: 5, chapName: "Ch 5: Sebaceous Glands",
-        prompt: "Exocrine glands that release an oily, lipid-rich secretion (sebum) via holocrine secretion into hair follicles to lubricate skin and inhibit bacterial growth are:",
-        options: ["Sebaceous glands", "Eccrine sweat glands", "Apocrine sweat glands", "Ceruminous glands"],
-        correct: 0,
-        explanation: "Sebaceous glands secrete sebum through holocrine lysis of secretory cells, keeping hair flexible, water-resistant, and chemically protected against bacterial proliferation."
-      },
-      {
-        id: 10, chapter: 5, chapName: "Ch 5: Sudoriferous Glands",
-        prompt: "Coiled tubular sweat glands distributed abundantly across the palms, soles, and forehead that produce watery perspiration for thermoregulation are:",
-        options: ["Eccrine (merocrine) sweat glands", "Apocrine sweat glands", "Sebaceous glands", "Ceruminous glands"],
-        correct: 0,
-        explanation: "Eccrine sweat glands discharge a hypotonic watery filtrate directly onto the skin surface via merocrine exocytosis to dissipate excess body heat through evaporative cooling."
-      },
-      {
-        id: 11, chapter: 5, chapName: "Ch 5: Sudoriferous Glands",
-        prompt: "Which large sweat glands become active at puberty in the axillary and anogenital regions, secreting a viscous organic sweat that causes body odor upon bacterial breakdown?",
-        options: ["Apocrine sweat glands", "Eccrine sweat glands", "Holocrine glands", "Mammary glands"],
-        correct: 0,
-        explanation: "Apocrine sweat glands empty into hair follicles in the axillary and groin areas, releasing a protein- and lipid-rich sweat that produces body odor when metabolized by surface bacteria."
-      },
-      {
-        id: 12, chapter: 5, chapName: "Ch 5: Cutaneous Sensation",
-        prompt: "Large, encapsulated sensory mechanoreceptors located deep in the dermis and hypodermis specialized for detecting deep pressure and high-frequency vibration are:",
-        options: ["Pacinian (lamellar) corpuscles", "Meissner corpuscles", "Merkel discs", "Free nerve endings"],
-        correct: 0,
-        explanation: "Pacinian (lamellar) corpuscles are onion-like layered mechanoreceptors situated deep in the dermis/hypodermis that respond rapidly to deep pressure and vibration."
-      },
-      {
-        id: 13, chapter: 5, chapName: "Ch 5: Hair Anatomy",
-        prompt: "The bundle of smooth muscle cells connecting the connective tissue root sheath of a hair follicle to the papillary dermis that causes 'goosebumps' upon contraction is the:",
-        options: ["Arrector pili muscle", "Bulbous rectus", "Orbicularis cutis", "Follicular sphincter"],
-        correct: 0,
-        explanation: "The arrector pili is an involuntary smooth muscle band stimulated by the sympathetic nervous system during cold or emotional stress, pulling the follicle upright."
-      },
-      {
-        id: 14, chapter: 5, chapName: "Ch 5: Vitamin D Synthesis",
-        prompt: "In the presence of solar UV radiation, epidermal keratinocytes convert a cholesterol derivative into cholecalciferol, the precursor to:",
-        options: ["Vitamin D (Calcitriol)", "Melatonin", "Keratin", "Vitamin A"],
-        correct: 0,
-        explanation: "Keratinocytes use UV radiation to convert 7-dehydrocholesterol to cholecalciferol (vitamin D3), which is enzymatically modified by the liver and kidneys into active calcitriol."
-      },
-      {
-        id: 15, chapter: 5, chapName: "Ch 5: Keratinization",
-        prompt: "In which epidermal layer do keratinocytes undergo apoptosis, accumulate keratohyalin granules, and release lamellar bodies rich in glycolipids to water-proof the skin?",
-        options: ["Stratum granulosum", "Stratum basale", "Stratum spinosum", "Stratum lucidum"],
-        correct: 0,
-        explanation: "In the stratum granulosum, cells begin dying, nuclei disintegrate, keratohyalin matures, and glycolipid secretion seals intercellular spaces to prevent fluid loss."
-      },
-      {
-        id: 16, chapter: 5, chapName: "Ch 5: Clinical Burns",
-        prompt: "A burn injury that damages the entire epidermis and upper portions of the dermis, characterized by pain, localized erythema, and blister formation, is a:",
-        options: ["Second-degree (partial-thickness) burn", "First-degree burn", "Third-degree (full-thickness) burn", "Fourth-degree burn"],
-        correct: 0,
-        explanation: "Second-degree burns penetrate into the dermis, causing tissue fluid accumulation between the epidermal and dermal layers that manifests clinically as blisters."
-      },
-      {
-        id: 17, chapter: 5, chapName: "Ch 5: Skin Cancers",
-        prompt: "The most lethal form of skin cancer, arising from the uncontrolled proliferation of pigment-producing cells and characterized by the ABCDE criteria, is:",
-        options: ["Melanoma", "Basal cell carcinoma", "Squamous cell carcinoma", "Kaposi sarcoma"],
-        correct: 0,
-        explanation: "Melanoma originates in melanocytes. It is highly invasive and metastatic, identified clinically by Asymmetry, Border irregularity, Color variation, Diameter >6mm, and Evolving shape."
-      },
-      {
-        id: 18, chapter: 5, chapName: "Ch 5: Cutaneous Cleavage",
-        prompt: "Predominant directional orientations of collagen fiber bundles within the reticular dermis that surgeons follow to minimize post-operative scarring are called:",
-        options: ["Cleavage lines (Langer lines)", "Friction ridges", "Flexure lines", "Dermal papillae"],
-        correct: 0,
-        explanation: "Cleavage (Langer's) lines reflect natural tension vectors of collagen bundles in the reticular dermis. Incisions parallel to these lines heal with minimal scar tissue."
-      },
-      {
-        id: 19, chapter: 5, chapName: "Ch 5: Nail Anatomy",
-        prompt: "The actively growing thickened proximal segment of the nail bed responsible for producing the nail plate is the:",
-        options: ["Nail matrix", "Hyponychium", "Eponychium (cuticle)", "Lunula"],
-        correct: 0,
-        explanation: "The nail matrix is the deep proliferating zone of epithelial stem cells at the nail root that divides and keratinizes to push the hardened nail plate forward."
-      },
-      {
-        id: 20, chapter: 5, chapName: "Ch 5: Nail Anatomy",
-        prompt: "The narrow fold of epidermis extending onto the proximal border of the nail plate, commonly known as the cuticle, is the:",
-        options: ["Eponychium", "Hyponychium", "Perionychium", "Lunula"],
-        correct: 0,
-        explanation: "The eponychium (cuticle) is the mucosal stratum corneum fold sealing the proximal junction between the dorsal digit skin and the emerging nail plate."
-      },
-      {
-        id: 21, chapter: 5, chapName: "Ch 5: Thermoregulation",
-        prompt: "When ambient body temperature rises, how do dermal blood vessels respond to dissipate heat through the skin surface?",
-        options: ["Vasodilation (arterioles dilate)", "Vasoconstriction", "Thrombosis", "Shunting blood exclusively to internal viscera"],
-        correct: 0,
-        explanation: "Dermal arterioles dilate (vasodilation), dramatically increasing blood flow through subpapillary plexuses so excess heat radiates away through the skin surface."
-      },
-      {
-        id: 22, chapter: 5, chapName: "Ch 5: Epidermal Histology",
-        prompt: "Which structural junction tightly anchors adjacent keratinocytes together in the stratum spinosum, giving cells their spiny microscopic appearance?",
-        options: ["Desmosomes", "Gap junctions", "Tight junctions", "Hemidesmosomes"],
-        correct: 0,
-        explanation: "Desmosomes are intermediate filament-reinforced spot welds holding shrinking keratinocytes together, creating artifactual spiny spines in histological preparation."
-      },
-      {
-        id: 23, chapter: 5, chapName: "Ch 5: Modified Glands",
-        prompt: "Specialized modified apocrine exocrine glands in the external auditory canal that secrete cerumen (earwax) are classified as:",
-        options: ["Ceruminous glands", "Mammary glands", "Sebaceous glands", "Eccrine glands"],
-        correct: 0,
-        explanation: "Ceruminous glands are modified apocrine coils in the ear canal that secrete a waxy component combining with sebaceous lipids to form protective earwax (cerumen)."
-      },
-      {
-        id: 24, chapter: 5, chapName: "Ch 5: Epidermal Renewal",
-        prompt: "The outermost epidermal layer consisting of 20 to 30 layers of dead, anucleated, flattened keratinized scales that continuously desquamate is the:",
-        options: ["Stratum corneum", "Stratum granulosum", "Stratum spinosum", "Stratum lucidum"],
-        correct: 0,
-        explanation: "The stratum corneum is the tough, keratin-packed superficial protective barrier that constantly sloughs away dead squames through normal desquamation."
-      },
-      {
-        id: 25, chapter: 5, chapName: "Ch 5: Clinical Conditions",
-        prompt: "An autoimmune inflammatory condition characterized by accelerated keratinocyte turnover, resulting in silvery, scaly plaques on erythematous skin, is:",
-        options: ["Psoriasis", "Eczema (dermatitis)", "Basal cell carcinoma", "Alopecia areata"],
-        correct: 0,
-        explanation: "Psoriasis is an autoimmune disorder where excessive T-cell signaling drives rapid epidermal mitosis, causing immature keratinocytes to pile up in scaly plaques."
-      },
-
-      /* CHAPTER 6: SKELETAL SYSTEM (26 - 50) */
-      {
-        id: 26, chapter: 6, chapName: "Ch 6: Bone Cells",
-        prompt: "Giant, multinucleated bone-resorbing cells derived from hematopoietic monocyte/macrophage lineages that secrete acid and enzymes to break down bone matrix are:",
-        options: ["Osteoclasts", "Osteoblasts", "Osteocytes", "Osteogenic cells"],
-        correct: 0,
-        explanation: "Osteoclasts are specialized multinucleated phagocytic cells that seal against bone and secrete hydrochloric acid and collagenases to resorb mineralized matrix."
-      },
-      {
-        id: 27, chapter: 6, chapName: "Ch 6: Bone Cells",
-        prompt: "Cuboidal bone-forming cells that actively synthesize, secrete, and deposit unmineralized organic bone matrix (osteoid) are:",
-        options: ["Osteoblasts", "Osteoclasts", "Osteocytes", "Chondrocytes"],
-        correct: 0,
-        explanation: "Osteoblasts are bone-building cells that manufacture collagen fibers and proteoglycans (osteoid) and initiate calcium phosphate crystallization."
-      },
-      {
-        id: 28, chapter: 6, chapName: "Ch 6: Bone Cells",
-        prompt: "Mature bone cells that reside inside tiny lacunae and maintain bone matrix homeostasis by detecting mechanical strain are called:",
-        options: ["Osteocytes", "Osteoclasts", "Osteoprogenitor cells", "Fibroblasts"],
-        correct: 0,
-        explanation: "Osteocytes are former osteoblasts entrapped in calcified lacunae; they act as mechanical stress sensors that coordinate bone remodeling through canaliculi networks."
-      },
-      {
-        id: 29, chapter: 6, chapName: "Ch 6: Bone Cells",
-        prompt: "Mesenchymal stem cells located in the periosteum, endosteum, and central canals that undergo mitosis to produce osteoblasts are:",
-        options: ["Osteogenic (osteoprogenitor) cells", "Osteocytes", "Osteoclasts", "Chondroblasts"],
-        correct: 0,
-        explanation: "Osteogenic cells are unspecialized stem cells capable of cell division; their daughter cells differentiate directly into matrix-producing osteoblasts."
-      },
-      {
-        id: 30, chapter: 6, chapName: "Ch 6: Compact Bone Histology",
-        prompt: "The structural and functional microscopic repeating cylindrical unit of compact bone tissue is termed the:",
-        options: ["Osteon (Haversian system)", "Trabecula", "Canaliculus", "Lacuna"],
-        correct: 0,
-        explanation: "An osteon (Haversian system) is the fundamental cylindrical structural unit of compact bone, consisting of concentric lamellae surrounding a neurovascular canal."
-      },
-      {
-        id: 31, chapter: 6, chapName: "Ch 6: Compact Bone Histology",
-        prompt: "The central longitudinal channel within an osteon carrying neurovascular structures (blood vessels and nerves) along the bone axis is the:",
-        options: ["Central (Haversian) canal", "Perforating (Volkmann) canal", "Canaliculus", "Medullary cavity"],
-        correct: 0,
-        explanation: "The central (Haversian) canal runs down the center of each osteon, containing arterial branches, venules, lymphatics, and nerves supplying resident osteocytes."
-      },
-      {
-        id: 32, chapter: 6, chapName: "Ch 6: Compact Bone Histology",
-        prompt: "Perpendicular or oblique canals that channel blood vessels from the periosteum inward to connect adjacent central canals are known as:",
-        options: ["Perforating (Volkmann) canals", "Haversian canals", "Canaliculi", "Medullary clefts"],
-        correct: 0,
-        explanation: "Perforating (Volkmann's) canals run at right angles to the long axis of the bone, linking periosteal blood vessels with central canals and the marrow cavity."
-      },
-      {
-        id: 33, chapter: 6, chapName: "Ch 6: Compact Bone Histology",
-        prompt: "Tiny microscopic fluid-filled micro-canals radiating between lacunae that connect osteocytes and allow nutrient exchange via gap junctions are:",
-        options: ["Canaliculi", "Lamellae", "Haversian troughs", "Sinusoids"],
-        correct: 0,
-        explanation: "Canaliculi are microscopic conduits filled with extracellular fluid through which dendritic cellular extensions of osteocytes contact each other via gap junctions."
-      },
-      {
-        id: 34, chapter: 6, chapName: "Ch 6: Spongy Bone Histology",
-        prompt: "The structural framework of spongy (cancellous) bone consists of an open, lattice-like network of microscopic bony plates and struts called:",
-        options: ["Trabeculae", "Osteons", "Concentric lamellae", "Perforating fibers"],
-        correct: 0,
-        explanation: "Spongy bone lacks true osteons; instead, its lamellae form an irregular latticework of arches and branching plates called trabeculae aligned with lines of stress."
-      },
-      {
-        id: 35, chapter: 6, chapName: "Ch 6: Bone Anatomy",
-        prompt: "The tubular central shaft of a typical long bone that houses the marrow-filled medullary cavity is the:",
-        options: ["Diaphysis", "Epiphysis", "Metaphysis", "Apophysis"],
-        correct: 0,
-        explanation: "The diaphysis is the elongated cylindrical shaft of a long bone composed of thick compact bone surrounding the central yellow marrow cavity."
-      },
-      {
-        id: 36, chapter: 6, chapName: "Ch 6: Bone Anatomy",
-        prompt: "The expanded bulbous proximal and distal ends of a long bone consisting of interior spongy bone capped by articular cartilage are called:",
-        options: ["Epiphyses", "Diaphyses", "Metaphyses", "Endostea"],
-        correct: 0,
-        explanation: "The epiphyses are the broad knobby ends of long bones that articulate with neighboring bones; they are filled with spongy bone containing red marrow."
-      },
-      {
-        id: 37, chapter: 6, chapName: "Ch 6: Bone Membranes",
-        prompt: "The tough, outer double-layered fibrous connective tissue membrane covering external bone surfaces (except at articular joints) is the:",
-        options: ["Periosteum", "Endosteum", "Perichondrium", "Synovium"],
-        correct: 0,
-        explanation: "The periosteum consists of an outer fibrous dense irregular layer and an inner osteogenic layer containing osteoblasts and osteoprogenitor cells."
-      },
-      {
-        id: 38, chapter: 6, chapName: "Ch 6: Bone Membranes",
-        prompt: "The delicate, vascular internal connective tissue membrane lining the medullary cavity, trabeculae, and central osteon canals is the:",
-        options: ["Endosteum", "Periosteum", "Perichondrium", "Sharpey matrix"],
-        correct: 0,
-        explanation: "The endosteum is an incomplete osteogenic cell layer lining all interior surfaces, including trabecular surfaces and Haversian canals."
-      },
-      {
-        id: 39, chapter: 6, chapName: "Ch 6: Bone Membranes",
-        prompt: "Thick tufts of collagen fibers that secure and anchor the outer periosteum firmly into the underlying calcified outer circumferential lamellae are:",
-        options: ["Perforating (Sharpey) fibers", "Trabeculae", "Elastic tendons", "Canaliculi"],
-        correct: 0,
-        explanation: "Perforating (Sharpey's) fibers are collagen extensions of the periosteum that penetrate deep into the bone matrix, anchoring ligaments and tendons."
-      },
-      {
-        id: 40, chapter: 6, chapName: "Ch 6: Chemical Matrix",
-        prompt: "The primary inorganic mineral salt component of bone matrix that provides extreme compressive hardness and rigidity is:",
-        options: ["Hydroxyapatite", "Osteoid collagen", "Chondroitin sulfate", "Calcium carbonate paste"],
-        correct: 0,
-        explanation: "Hydroxyapatite represents approximately 65% of bone dry weight, forming crystallized mineral plates around collagen fibers to resist compressive forces."
-      },
-      {
-        id: 41, chapter: 6, chapName: "Ch 6: Bone Ossification",
-        prompt: "The developmental process where flat bones (such as cranial bones and clavicles) form directly within embryonic fibrous mesenchymal membranes is:",
-        options: ["Intramembranous ossification", "Endochondral ossification", "Appositional growth", "Heterotopic mineralization"],
-        correct: 0,
-        explanation: "Intramembranous ossification develops directly inside condensed sheets of embryonic mesenchymal connective tissue without a prior hyaline cartilage model."
-      },
-      {
-        id: 42, chapter: 6, chapName: "Ch 6: Bone Ossification",
-        prompt: "The primary ossification center forms during endochondral bone formation within which anatomical region of the embryonic cartilage model?",
-        options: ["Center of the diaphysis", "Proximal epiphysis", "Distal epiphysis", "Articular joint capsule"],
-        correct: 0,
-        explanation: "During endochondral ossification, a primary ossification center arises at the midsection of the shaft (diaphysis) as blood vessels penetrate the calcifying cartilage."
-      },
-      {
-        id: 43, chapter: 6, chapName: "Ch 6: Longitudinal Growth",
-        prompt: "The specialized layer of hyaline cartilage residing in the metaphysis of growing children that allows bones to increase in length is the:",
-        options: ["Epiphyseal plate (growth plate)", "Articular cartilage", "Primary trabecular core", "Epiphyseal line"],
-        correct: 0,
-        explanation: "The epiphyseal plate consists of hyaline cartilage zones where chondrocytes proliferate, hypertrophy, calcify, and are replaced by bone to lengthen the diaphysis."
-      },
-      {
-        id: 44, chapter: 6, chapName: "Ch 6: Appositional Growth",
-        prompt: "The process by which bones increase in thickness and diameter through the outward addition of bone tissue beneath the periosteum is called:",
-        options: ["Appositional growth", "Endochondral elongation", "Interstitial growth", "Fibroblastic expansion"],
-        correct: 0,
-        explanation: "Appositional growth occurs as osteoblasts under the periosteum deposit new circumferential lamellae while osteoclasts resorb inner bone to expand the marrow cavity."
-      },
-      {
-        id: 45, chapter: 6, chapName: "Ch 6: Calcium Homeostasis",
-        prompt: "Which hormone is released by the parathyroid glands in response to low systemic blood calcium (Ca2+) levels to stimulate osteoclast activity?",
-        options: ["Parathyroid hormone (PTH)", "Calcitonin", "Thyroxine", "Insulin-like growth factor"],
-        correct: 0,
-        explanation: "Parathyroid hormone (PTH) stimulates osteoclasts to resorb bone matrix, activates kidney calcitriol synthesis, and reduces urinary calcium loss to raise blood calcium."
-      },
-      {
-        id: 46, chapter: 6, chapName: "Ch 6: Calcium Homeostasis",
-        prompt: "Which hormone secreted by thyroid parafollicular (C) cells inhibits osteoclasts and promotes calcium deposition into bone matrix during hypercalcemia?",
-        options: ["Calcitonin", "Parathyroid hormone", "Calcitriol", "Growth hormone"],
-        correct: 0,
-        explanation: "Calcitonin acts antagonistically to PTH; it suppresses osteoclastic resorption and stimulates osteoblasts to deposit calcium when systemic levels are abnormally high."
-      },
-      {
-        id: 47, chapter: 6, chapName: "Ch 6: Bone Remodeling",
-        prompt: "The mechanical principle stating that bone architecture adapts and remodels along the lines of physical stress and functional mechanical loading is:",
-        options: ["Wolff's law", "Starling's law", "The Octet rule", "Laplace's principle"],
-        correct: 0,
-        explanation: "Wolff's law dictates that physical stress, muscular pull, and gravitational loading stimulate osteocytes and osteoblasts to deposit thicker compact bone along stress lines."
-      },
-      {
-        id: 48, chapter: 6, chapName: "Ch 6: Fracture Repair",
-        prompt: "What is the correct sequential order of biological stages during bone fracture repair?",
-        options: [
-          "Hematoma formation -> Fibrocartilaginous callus -> Bony callus -> Bone remodeling",
-          "Fibrocartilaginous callus -> Hematoma formation -> Bony callus -> Bone remodeling",
-          "Bony callus -> Hematoma formation -> Fibrocartilaginous callus -> Bone remodeling",
-          "Hematoma formation -> Bony callus -> Fibrocartilaginous callus -> Remodeling"
-        ],
-        correct: 0,
-        explanation: "Fracture repair begins with a fracture hematoma, followed by capillary invasion and a soft fibrocartilaginous callus, conversion to a woven bony callus, and remodeling into compact bone."
-      },
-      {
-        id: 49, chapter: 6, chapName: "Ch 6: Skeletal Pathologies",
-        prompt: "A metabolic skeletal disorder characterized by excessive bone resorption outpacing deposition, leading to fragile, porous, fracture-prone bones, is:",
-        options: ["Osteoporosis", "Osteomalacia", "Osteogenesis imperfecta", "Paget's disease"],
-        correct: 0,
-        explanation: "Osteoporosis occurs when osteoclast resorption exceeds osteoblast bone deposition, significantly reducing bone mineral density, commonly after menopause."
-      },
-      {
-        id: 50, chapter: 6, chapName: "Ch 6: Skeletal Classification",
-        prompt: "The patella is anatomically classified as which specific type of bone formed within a tendon to reduce friction across a joint?",
-        options: ["Sesamoid bone", "Pneumatic bone", "Flat bone", "Irregular bone"],
-        correct: 0,
-        explanation: "Sesamoid bones (such as the patella) are small, flat bones that embed directly within tendons to alter mechanical pull angles and protect the tendon from joint wear."
-      }
+      { id: 26, chapter: 6, category: "Ch 6: Bone Cells", prompt: "Large multinucleated cells derived from white blood cell lines that secrete acid to dissolve bone matrix are:", options: ["Osteoclasts", "Osteoblasts", "Osteocytes", "Osteogenic cells"], answer: "Osteoclasts", expl: "Osteoclasts resorb mineralized bone tissue by releasing hydrochloric acid and lysosomal enzymes." },
+      { id: 27, chapter: 6, category: "Ch 6: Bone Cells", prompt: "Bone-building cells that synthesize and secrete organic bone matrix (osteoid) are:", options: ["Osteoblasts", "Osteoclasts", "Osteocytes", "Chondrocytes"], answer: "Osteoblasts", expl: "Osteoblasts deposit collagen and proteoglycans (osteoid) and initiate calcification." },
+      { id: 28, chapter: 6, category: "Ch 6: Bone Cells", prompt: "Mature bone cells entrapped inside lacunae that maintain matrix and sense mechanical stress are:", options: ["Osteocytes", "Osteoclasts", "Osteoprogenitor cells", "Fibroblasts"], answer: "Osteocytes", expl: "Osteocytes monitor physical strain and communicate through canaliculi to direct remodeling." },
+      { id: 29, chapter: 6, category: "Ch 6: Bone Cells", prompt: "Mesenchymal stem cells located in the periosteum and endosteum that divide to create osteoblasts are:", options: ["Osteogenic cells", "Osteocytes", "Osteoclasts", "Chondroblasts"], answer: "Osteogenic cells", expl: "Osteogenic (osteoprogenitor) cells are the only bone cells that undergo cellular mitosis." },
+      { id: 30, chapter: 6, category: "Ch 6: Histology", prompt: "The basic microscopic cylindrical structural unit of compact bone is the:", options: ["Osteon", "Trabecula", "Canaliculus", "Lacuna"], answer: "Osteon", expl: "An osteon (Haversian system) is the cylindrical unit composed of concentric lamellae around a central canal." },
+      { id: 31, chapter: 6, category: "Ch 6: Histology", prompt: "The longitudinal canal located in the center of an osteon containing blood vessels and nerves is the:", options: ["Central canal", "Perforating canal", "Canaliculus", "Medullary cavity"], answer: "Central canal", expl: "The central (Haversian) canal carries blood vessels and nerve fibers through the core of the osteon." },
+      { id: 32, chapter: 6, category: "Ch 6: Histology", prompt: "Canals that run perpendicular to the bone axis connecting periosteal vessels to central canals are:", options: ["Perforating canals", "Haversian canals", "Canaliculi", "Medullary clefts"], answer: "Perforating canals", expl: "Perforating (Volkmann) canals route blood vessels from outside the bone into central canals." },
+      { id: 33, chapter: 6, category: "Ch 6: Histology", prompt: "Tiny micro-canals radiating between lacunae that allow osteocytes to share nutrients via gap junctions are:", options: ["Canaliculi", "Lamellae", "Central canals", "Sinusoids"], answer: "Canaliculi", expl: "Canaliculi contain the cytoplasmic extensions of osteocytes to pass ions and nutrients." },
+      { id: 34, chapter: 6, category: "Ch 6: Histology", prompt: "The lattice-like network of microscopic bony plates and struts found in spongy bone is called:", options: ["Trabeculae", "Osteons", "Concentric lamellae", "Perforating fibers"], answer: "Trabeculae", expl: "Spongy bone lacks complete osteons; its matrix organizes into stress-aligned struts called trabeculae." },
+      { id: 35, chapter: 6, category: "Ch 6: Anatomy", prompt: "The tubular shaft of a typical long bone containing the yellow marrow cavity is the:", options: ["Diaphysis", "Epiphysis", "Metaphysis", "Apophysis"], answer: "Diaphysis", expl: "The diaphysis is the long central cylinder of compact bone enclosing the medullary cavity." },
+      { id: 36, chapter: 6, category: "Ch 6: Anatomy", prompt: "The expanded bulbous ends of a long bone filled with spongy bone and red marrow are the:", options: ["Epiphyses", "Diaphyses", "Metaphyses", "Endostea"], answer: "Epiphyses", expl: "The epiphyses are the knobby proximal and distal joint-forming ends of long bones." },
+      { id: 37, chapter: 6, category: "Ch 6: Membranes", prompt: "The tough fibrous connective tissue membrane covering all outer bone surfaces except articular joints is the:", options: ["Periosteum", "Endosteum", "Perichondrium", "Synovium"], answer: "Periosteum", expl: "The periosteum contains an outer fibrous protective layer and an inner osteogenic layer." },
+      { id: 38, chapter: 6, category: "Ch 6: Membranes", prompt: "The delicate vascular membrane lining the internal marrow cavities, trabeculae, and central canals is the:", options: ["Endosteum", "Periosteum", "Perichondrium", "Sharpey matrix"], answer: "Endosteum", expl: "The endosteum is an active osteogenic layer lining the inside surfaces of bone." },
+      { id: 39, chapter: 6, category: "Ch 6: Membranes", prompt: "Collagen fibers that firmly anchor the periosteum into the outer circumferential lamellae are:", options: ["Perforating (Sharpey) fibers", "Trabeculae", "Tendons", "Canaliculi"], answer: "Perforating (Sharpey) fibers", expl: "Perforating (Sharpey) fibers lock the periosteum and attached tendons directly into the bone matrix." },
+      { id: 40, chapter: 6, category: "Ch 6: Matrix", prompt: "The mineral salt crystal component of bone matrix providing compressive hardness is:", options: ["Hydroxyapatite", "Osteoid collagen", "Chondroitin sulfate", "Calcium carbonate"], answer: "Hydroxyapatite", expl: "Calcium phosphate crystals (hydroxyapatite) form the hard inorganic mineral component of bone." },
+      { id: 41, chapter: 6, category: "Ch 6: Ossification", prompt: "The bone formation process where flat cranial bones form directly inside embryonic mesenchymal membranes is:", options: ["Intramembranous ossification", "Endochondral ossification", "Appositional growth", "Remodeling"], answer: "Intramembranous ossification", expl: "Intramembranous ossification builds bone directly within mesenchymal sheets without a cartilage model." },
+      { id: 42, chapter: 6, category: "Ch 6: Ossification", prompt: "During endochondral bone formation, the primary ossification center first appears in the:", options: ["Center of diaphysis", "Proximal epiphysis", "Distal epiphysis", "Articular cartilage"], answer: "Center of diaphysis", expl: "Blood vessels penetrate the perichondrium at the mid-shaft to initiate the primary ossification center." },
+      { id: 43, chapter: 6, category: "Ch 6: Growth", prompt: "The hyaline cartilage plate located in the metaphysis that allows growing bones to lengthen is the:", options: ["Epiphyseal plate", "Articular cartilage", "Trabecular zone", "Epiphyseal line"], answer: "Epiphyseal plate", expl: "Chondrocytes divide and push the epiphysis away from the diaphysis, lengthening the bone." },
+      { id: 44, chapter: 6, category: "Ch 6: Growth", prompt: "The process by which bones increase in width and thickness beneath the periosteum is called:", options: ["Appositional growth", "Endochondral elongation", "Interstitial growth", "Fibrosis"], answer: "Appositional growth", expl: "Osteoblasts under the periosteum lay down new matrix while osteoclasts widen the marrow cavity." },
+      { id: 45, chapter: 6, category: "Ch 6: Homeostasis", prompt: "Which hormone is released by the parathyroid glands during hypocalcemia to stimulate osteoclast activity?", options: ["Parathyroid hormone (PTH)", "Calcitonin", "Thyroxine", "Growth hormone"], answer: "Parathyroid hormone (PTH)", expl: "PTH triggers osteoclasts to dissolve bone and release calcium into the bloodstream." },
+      { id: 46, chapter: 6, category: "Ch 6: Homeostasis", prompt: "Which thyroid hormone inhibits osteoclasts and encourages bone deposition during high blood calcium levels?", options: ["Calcitonin", "Parathyroid hormone", "Calcitriol", "Estrogen"], answer: "Calcitonin", expl: "Calcitonin lowers elevated blood calcium levels by dampening osteoclast activity." },
+      { id: 47, chapter: 6, category: "Ch 6: Physiology", prompt: "The principle stating that bones adapt and grow stronger along lines of mechanical stress is:", options: ["Wolff's law", "Starling's law", "The Octet rule", "Laplace's rule"], answer: "Wolff's law", expl: "Wolff's law explains how physical stress and mechanical forces thicken bone cortex along tension lines." },
+      { id: 48, chapter: 6, category: "Ch 6: Fracture Repair", prompt: "What is the correct sequential order of bone fracture repair?", options: [
+        "Hematoma -> Soft callus -> Bony callus -> Remodeling",
+        "Soft callus -> Hematoma -> Bony callus -> Remodeling",
+        "Bony callus -> Hematoma -> Soft callus -> Remodeling",
+        "Hematoma -> Bony callus -> Soft callus -> Remodeling"
+      ], answer: "Hematoma -> Soft callus -> Bony callus -> Remodeling", expl: "Fracture repair progresses from a hematoma to a fibrocartilaginous callus, hard bony callus, and remodeling." },
+      { id: 49, chapter: 6, category: "Ch 6: Pathology", prompt: "A condition where bone resorption outpaces deposition, making bones fragile and porous, is:", options: ["Osteoporosis", "Osteomalacia", "Osteogenesis imperfecta", "Paget's disease"], answer: "Osteoporosis", expl: "Osteoporosis involves substantial loss of bone mineral density, elevating fracture risk." },
+      { id: 50, chapter: 6, category: "Ch 6: Classification", prompt: "The patella is classified as which specific bone type that develops inside a tendon to reduce friction?", options: ["Sesamoid bone", "Pneumatic bone", "Flat bone", "Irregular bone"], answer: "Sesamoid bone", expl: "Sesamoid bones form inside tendons near joints to optimize mechanical pull and minimize tendon wear." }
     ];
 
-    /* SAFE STORAGE ENGINE */
-    const STORAGE_KEY = "ap1_unit2_v3_mastery";
+    /* SAFE PROGRESSION TRACKING (localStorage with fallback) */
+    const STORAGE_TAG = "ap1_u2_clean_mastery";
+    let memoryMastered = [];
 
-    function getMasteredIDs() {
+    function readMastered() {
       try {
-        const stored = localStorage.getItem(STORAGE_KEY);
-        if (!stored) return [];
-        const parsed = JSON.parse(stored);
-        return Array.isArray(parsed) ? parsed : [];
-      } catch (e) {
-        localStorage.removeItem(STORAGE_KEY);
-        return [];
-      }
-    }
-
-    function saveMasteredID(id) {
-      let mastered = getMasteredIDs();
-      const hadUnlockedBefore = isBoneUnlocked(mastered);
-
-      if (!mastered.includes(id)) {
-        mastered.push(id);
-        try {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(mastered));
-        } catch (e) {}
-      }
-
-      const nowUnlocked = isBoneUnlocked(mastered);
-      if (!hadUnlockedBefore && nowUnlocked) {
-        triggerScienceConfetti();
-        alert("🎉 Congratulations! You have mastered 80% of the Integumentary System! The Skeletal System (Bone Biology) is now unlocked!");
-      }
-
-      updateDashboard();
-    }
-
-    function isBoneUnlocked(masteredList) {
-      const skinMasteredCount = masteredList.filter(id => id <= 25).length;
-      return skinMasteredCount >= UNLOCK_THRESHOLD;
-    }
-
-    function clearSavedMastery() {
-      if (confirm("Reset all mastered question history for Unit 2?")) {
-        try {
-          localStorage.removeItem(STORAGE_KEY);
-        } catch (e) {}
-        updateDashboard();
-        startNewAttempt();
-      }
-    }
-
-    function updateDashboard() {
-      const mastered = getMasteredIDs();
-      const total = QUESTION_BANK.length;
-      const count = mastered.length;
-      const pct = Math.round((count / total) * 100);
-
-      const skinMastered = mastered.filter(id => id <= 25).length;
-      const boneMastered = mastered.filter(id => id > 25).length;
-      const unlocked = isBoneUnlocked(mastered);
-
-      document.getElementById("masteredCount").textContent = `${count} / ${total}`;
-      document.getElementById("masteryPct").textContent = `${pct}%`;
-      document.getElementById("questionsLeft").textContent = total - count;
-      document.getElementById("masteryBar").style.width = `${pct}%`;
-
-      document.getElementById("skinMasteredCount").textContent = `${skinMastered} / 25`;
-
-      const banner = document.getElementById("tierBanner");
-      const statusText = document.getElementById("tierStatusText");
-      const counterText = document.getElementById("tierCounterText");
-      const boneDisplay = document.getElementById("boneMasteredCount");
-
-      if (!unlocked) {
-        banner.className = "tier-banner locked";
-        statusText.innerHTML = `🔒 <strong>Stage 1: Integumentary System</strong> (Master 20/25 skin questions to unlock Bone Biology)`;
-        counterText.textContent = `${skinMastered} / ${UNLOCK_THRESHOLD}`;
-        boneDisplay.textContent = "🔒 Locked";
-        boneDisplay.style.color = "#94a3b8";
-      } else {
-        banner.className = "tier-banner unlocked";
-        statusText.innerHTML = `🔓 <strong>Stage 2: Comprehensive Mode</strong> (Both Integumentary & Skeletal Systems Active)`;
-        counterText.textContent = "UNLOCKED";
-        boneDisplay.textContent = `${boneMastered} / 25`;
-        boneDisplay.style.color = "#38bdf8";
-      }
-    }
-
-    /* ATTEMPT SAMPLER */
-    let currentQuestions = [];
-    let currentAnswers = {};
-    let currentCorrectCount = 0;
-
-    function sampleQuizQuestions() {
-      const mastered = getMasteredIDs();
-      const unlocked = isBoneUnlocked(mastered);
-      let picked = [];
-
-      if (!unlocked) {
-        let skinQuestions = QUESTION_BANK.filter(q => q.chapter === 5);
-        let unmasteredSkin = skinQuestions.filter(q => !mastered.includes(q.id));
-
-        unmasteredSkin.sort(() => Math.random() - 0.5);
-        skinQuestions.sort(() => Math.random() - 0.5);
-
-        if (unmasteredSkin.length >= 10) {
-          picked = unmasteredSkin.slice(0, 10);
-        } else {
-          picked = unmasteredSkin.concat(skinQuestions.filter(q => !unmasteredSkin.includes(q))).slice(0, 10);
+        const d = localStorage.getItem(STORAGE_TAG);
+        if (d) {
+          const arr = JSON.parse(d);
+          if (Array.isArray(arr)) return arr;
         }
+      } catch (err) {}
+      return memoryMastered;
+    }
+
+    function recordMastered(qid) {
+      let list = readMastered();
+      const hadUnlocked = checkUnlocked(list);
+      if (!list.includes(qid)) {
+        list.push(qid);
+        memoryMastered = list;
+        try {
+          localStorage.setItem(STORAGE_TAG, JSON.stringify(list));
+        } catch (err) {}
+      }
+      const nowUnlocked = checkUnlocked(list);
+      if (!hadUnlocked && nowUnlocked) {
+        shootConfetti();
+        alert("🎉 Congratulations! You have mastered 20 Integumentary questions! The Skeletal System (Bone Biology) is now unlocked!");
+      }
+      refreshStats();
+    }
+
+    function checkUnlocked(list) {
+      const skinCount = list.filter(id => id <= 25).length;
+      return skinCount >= 20;
+    }
+
+    function refreshStats() {
+      const list = readMastered();
+      const totalCount = BANK.length;
+      const masteredCount = list.length;
+      const skinCount = list.filter(id => id <= 25).length;
+      const boneCount = list.filter(id => id > 25).length;
+      const isUnlocked = checkUnlocked(list);
+
+      const pct = Math.round((masteredCount / totalCount) * 100);
+      document.getElementById("dashMastery").textContent = pct + "%";
+      document.getElementById("dashTotal").textContent = masteredCount + " / " + totalCount;
+      document.getElementById("dashSkin").textContent = skinCount + " / 25";
+      document.getElementById("dashBar").style.width = pct + "%";
+
+      const bBox = document.getElementById("bannerBox");
+      const bMsg = document.getElementById("bannerMsg");
+      const bCtr = document.getElementById("bannerCounter");
+      const bStat = document.getElementById("dashBone");
+
+      if (!isUnlocked) {
+        bBox.className = "banner locked";
+        bMsg.innerHTML = "🔒 <strong>Stage 1: Integumentary System</strong> (Master 20/25 to unlock Bone Biology)";
+        bCtr.textContent = skinCount + " / 20";
+        bStat.textContent = "🔒 Locked";
+        bStat.style.color = "#94a3b8";
       } else {
+        bBox.className = "banner unlocked";
+        bMsg.innerHTML = "🔓 <strong>Stage 2: Comprehensive Mode</strong> (Integumentary & Skeletal Systems Active)";
+        bCtr.textContent = "UNLOCKED";
+        bStat.textContent = boneCount + " / 25";
+        bStat.style.color = "#38bdf8";
+      }
+    }
+
+    /* ROUND LOGIC (GENERATES 10 BALANCED QUESTIONS) */
+    let currentRoundQuestions = [];
+    let roundAnswers = {};
+    let roundCorrect = 0;
+
+    function pickQuestions() {
+      const list = readMastered();
+      const unlocked = checkUnlocked(list);
+      let selected = [];
+
+      if (!unlocked) {
+        // Only Chapter 5 (Skin: IDs 1-25)
+        let skinPool = BANK.filter(q => q.chapter === 5);
+        let unmastered = skinPool.filter(q => !list.includes(q.id)).sort(() => Math.random() - 0.5);
+        let mastered = skinPool.filter(q => list.includes(q.id)).sort(() => Math.random() - 0.5);
+        selected = unmastered.concat(mastered).slice(0, 10);
+      } else {
+        // 5 from Skin, 5 from Bone
         [5, 6].forEach(ch => {
-          let chQuestions = QUESTION_BANK.filter(q => q.chapter === ch);
-          let unmastered = chQuestions.filter(q => !mastered.includes(q.id));
-
-          unmastered.sort(() => Math.random() - 0.5);
-          chQuestions.sort(() => Math.random() - 0.5);
-
-          let take = [];
-          if (unmastered.length >= 5) {
-            take = unmastered.slice(0, 5);
-          } else {
-            take = unmastered.concat(chQuestions.filter(q => !unmastered.includes(q))).slice(0, 5);
-          }
-          picked = picked.concat(take);
+          let pool = BANK.filter(q => q.chapter === ch);
+          let unmastered = pool.filter(q => !list.includes(q.id)).sort(() => Math.random() - 0.5);
+          let mastered = pool.filter(q => list.includes(q.id)).sort(() => Math.random() - 0.5);
+          selected = selected.concat(unmastered.concat(mastered).slice(0, 5));
         });
       }
 
-      return picked.sort(() => Math.random() - 0.5);
+      return selected.sort(() => Math.random() - 0.5);
     }
 
-    function startNewAttempt() {
-      currentQuestions = sampleQuizQuestions();
-      currentAnswers = {};
-      currentCorrectCount = 0;
+    function buildQuizDOM() {
+      currentRoundQuestions = pickQuestions();
+      roundAnswers = {};
+      roundCorrect = 0;
+      updateRoundStats();
+      refreshStats();
 
-      updateDashboard();
-      updateAttemptStats();
-      renderActiveQuiz();
+      const feed = document.getElementById("quizFeed");
+      feed.innerHTML = "";
+
+      currentRoundQuestions.forEach((q, index) => {
+        const card = document.createElement("div");
+        card.className = "q-box";
+
+        const head = document.createElement("div");
+        head.className = "q-title";
+        head.innerHTML = "<span>Question " + (index + 1) + " • <strong style='color:#38bdf8;'>" + q.category + "</strong></span><span>1 pt</span>";
+        card.appendChild(head);
+
+        const body = document.createElement("div");
+        body.className = "q-main";
+
+        const text = document.createElement("div");
+        text.className = "q-text";
+        text.textContent = q.prompt;
+        body.appendChild(text);
+
+        const optsGroup = document.createElement("div");
+        optsGroup.className = "options-group";
+
+        const expl = document.createElement("div");
+        expl.className = "expl-banner";
+        expl.id = "expl_" + q.id;
+
+        // Scramble options
+        const shuffledOpts = [...q.options].sort(() => Math.random() - 0.5);
+
+        shuffledOpts.forEach(optText => {
+          const btn = document.createElement("div");
+          btn.className = "opt-item";
+
+          const dot = document.createElement("div");
+          dot.className = "opt-dot";
+
+          const label = document.createElement("span");
+          label.textContent = optText;
+
+          btn.appendChild(dot);
+          btn.appendChild(label);
+
+          btn.onclick = function() {
+            if (roundAnswers[q.id] !== undefined) return;
+            roundAnswers[q.id] = optText;
+
+            const isRight = (optText === q.answer);
+
+            // Lock row
+            Array.from(optsGroup.children).forEach(child => {
+              child.classList.add("disabled");
+              const childText = child.querySelector("span").textContent;
+              if (childText === q.answer) {
+                child.classList.add("picked-right");
+              } else if (childText === optText) {
+                child.classList.add("picked-wrong");
+              }
+            });
+
+            if (isRight) {
+              roundCorrect++;
+              recordMastered(q.id);
+              expl.className = "expl-banner show-right";
+              expl.innerHTML = "<strong>✓ Correct!</strong> " + q.expl;
+              shootConfetti();
+            } else {
+              expl.className = "expl-banner show-wrong";
+              expl.innerHTML = "<strong>✗ Incorrect.</strong> " + q.expl;
+            }
+
+            updateRoundStats();
+          };
+
+          optsGroup.appendChild(btn);
+        });
+
+        body.appendChild(optsGroup);
+        body.appendChild(expl);
+        card.appendChild(body);
+        feed.appendChild(card);
+      });
+
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
-    function renderActiveQuiz() {
-      const container = document.getElementById("quizContainer");
-      container.innerHTML = "";
-
-      currentQuestions.forEach((q, qIndex) => {
-        const card = document.createElement("div");
-        card.className = "q-card";
-        card.id = `qCard_${q.id}`;
-
-        const indices = [0, 1, 2, 3].sort(() => Math.random() - 0.5);
-
-        let optionsHtml = "";
-        indices.forEach(optIndex => {
-          optionsHtml += `
-            <div class="opt-btn" id="opt_${q.id}_${optIndex}" onclick="submitAnswer(${q.id}, ${optIndex})">
-              <div class="radio-circle"></div>
-              <div>${q.options[optIndex]}</div>
-            </div>
-          `;
-        });
-
-        card.innerHTML = `
-          <div class="q-header">
-            <span>Question ${qIndex + 1} • <strong style="color:#38bdf8;">${q.chapName}</strong></span>
-            <span>1 pt</span>
-          </div>
-          <div class="q-body">
-            <div class="q-prompt">${q.prompt}</div>
-            <div class="options-list">
-              ${optionsHtml}
-            </div>
-            <div class="feedback-box" id="feedback_${q.id}"></div>
-          </div>
-        `;
-        container.appendChild(card);
-      });
+    function updateRoundStats() {
+      const answered = Object.keys(roundAnswers).length;
+      document.getElementById("roundProgress").textContent = answered + " / " + currentRoundQuestions.length;
+      const scorePct = answered === 0 ? 0 : Math.round((roundCorrect / answered) * 100);
+      document.getElementById("roundScore").textContent = scorePct + "%";
     }
 
-    function submitAnswer(qId, chosenIdx) {
-      if (currentAnswers[qId] !== undefined) return;
-      currentAnswers[qId] = chosenIdx;
-
-      const q = currentQuestions.find(item => item.id === qId);
-      const isCorrect = (chosenIdx === q.correct);
-
-      [0, 1, 2, 3].forEach(idx => {
-        const btn = document.getElementById(`opt_${qId}_${idx}`);
-        if (btn) {
-          btn.classList.add("locked");
-          if (idx === q.correct) {
-            btn.classList.add("correct-choice");
-          } else if (idx === chosenIdx) {
-            btn.classList.add("wrong-choice");
-          }
-        }
-      });
-
-      const fb = document.getElementById(`feedback_${qId}`);
-      if (isCorrect) {
-        currentCorrectCount++;
-        saveMasteredID(q.id);
-        fb.className = "feedback-box correct";
-        fb.innerHTML = `<strong>✓ Correct!</strong> ${q.explanation}`;
-        triggerScienceConfetti();
-      } else {
-        fb.className = "feedback-box incorrect";
-        fb.innerHTML = `<strong>✗ Incorrect.</strong> ${q.explanation}`;
-      }
-
-      updateAttemptStats();
-    }
-
-    function updateAttemptStats() {
-      const answered = Object.keys(currentAnswers).length;
-      document.getElementById("attemptProgress").textContent = `${answered} / ${currentQuestions.length}`;
-      const pct = answered === 0 ? 0 : Math.round((currentCorrectCount / answered) * 100);
-      document.getElementById("attemptScore").textContent = `${pct}%`;
-    }
-
-    /* ANIMATED SCIENCE CONFETTI */
+    /* SCIENCE CONFETTI SYSTEM */
     const canvas = document.getElementById("confettiCanvas");
     const ctx = canvas.getContext("2d");
-    let particles = [];
-    let animationFrame = null;
+    let confettiParts = [];
+    let confettiTimer = null;
 
-    function resizeCanvas() {
+    function fitCanvas() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     }
-    window.addEventListener("resize", resizeCanvas);
-    resizeCanvas();
+    window.addEventListener("resize", fitCanvas);
+    fitCanvas();
 
-    function triggerScienceConfetti() {
-      const count = 45;
+    function shootConfetti() {
       const colors = ["#38bdf8", "#4ade80", "#facc15", "#fb923c", "#c084fc", "#22d3ee"];
-      const shapes = ["dna", "atom", "ring", "star", "circle"];
+      const shapes = ["atom", "dna", "ring", "spark"];
 
-      for (let i = 0; i < count; i++) {
-        particles.push({
+      for (let i = 0; i < 40; i++) {
+        confettiParts.push({
           x: window.innerWidth / 2 + (Math.random() * 200 - 100),
-          y: window.innerHeight * 0.35 + (Math.random() * 100 - 50),
-          vx: (Math.random() - 0.5) * 14,
-          vy: Math.random() * -12 - 4,
-          size: Math.random() * 12 + 10,
+          y: window.innerHeight * 0.35 + (Math.random() * 80 - 40),
+          vx: (Math.random() - 0.5) * 12,
+          vy: Math.random() * -10 - 4,
+          size: Math.random() * 10 + 8,
           color: colors[Math.floor(Math.random() * colors.length)],
           shape: shapes[Math.floor(Math.random() * shapes.length)],
-          rotation: Math.random() * Math.PI * 2,
-          vr: (Math.random() - 0.5) * 0.2,
+          rot: Math.random() * 6.28,
+          vrot: (Math.random() - 0.5) * 0.2,
           alpha: 1
         });
       }
 
-      if (!animationFrame) {
+      if (!confettiTimer) {
         animateConfetti();
       }
     }
@@ -988,32 +617,28 @@
     function animateConfetti() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      for (let i = particles.length - 1; i >= 0; i--) {
-        const p = particles[i];
+      for (let i = confettiParts.length - 1; i >= 0; i--) {
+        const p = confettiParts[i];
         p.x += p.vx;
         p.y += p.vy;
         p.vy += 0.35;
-        p.rotation += p.vr;
-        p.alpha -= 0.012;
+        p.rot += p.vrot;
+        p.alpha -= 0.015;
 
         ctx.save();
         ctx.translate(p.x, p.y);
-        ctx.rotate(p.rotation);
+        ctx.rotate(p.rot);
         ctx.globalAlpha = Math.max(p.alpha, 0);
         ctx.strokeStyle = p.color;
         ctx.fillStyle = p.color;
         ctx.lineWidth = 2;
 
-        if (p.shape === "circle") {
-          ctx.beginPath();
-          ctx.arc(0, 0, p.size / 3, 0, Math.PI * 2);
-          ctx.fill();
-        } else if (p.shape === "ring") {
+        if (p.shape === "ring") {
           ctx.beginPath();
           for (let s = 0; s < 6; s++) {
-            const angle = (s * Math.PI) / 3;
-            const hx = Math.cos(angle) * (p.size / 2);
-            const hy = Math.sin(angle) * (p.size / 2);
+            const a = (s * Math.PI) / 3;
+            const hx = Math.cos(a) * (p.size / 2);
+            const hy = Math.sin(a) * (p.size / 2);
             if (s === 0) ctx.moveTo(hx, hy);
             else ctx.lineTo(hx, hy);
           }
@@ -1024,38 +649,43 @@
           ctx.ellipse(0, 0, p.size / 2, p.size / 5, Math.PI / 4, 0, Math.PI * 2);
           ctx.ellipse(0, 0, p.size / 2, p.size / 5, -Math.PI / 4, 0, Math.PI * 2);
           ctx.stroke();
-          ctx.beginPath();
-          ctx.arc(0, 0, 2.5, 0, Math.PI * 2);
-          ctx.fill();
         } else if (p.shape === "dna") {
           ctx.beginPath();
           ctx.moveTo(-p.size / 2, -p.size / 3);
           ctx.lineTo(p.size / 2, -p.size / 3);
           ctx.moveTo(-p.size / 2, p.size / 3);
           ctx.lineTo(p.size / 2, p.size / 3);
-          ctx.moveTo(0, -p.size / 3);
-          ctx.lineTo(0, p.size / 3);
           ctx.stroke();
-        } else if (p.shape === "star") {
+        } else {
           ctx.fillRect(-p.size / 4, -p.size / 4, p.size / 2, p.size / 2);
         }
 
         ctx.restore();
 
         if (p.alpha <= 0 || p.y > canvas.height) {
-          particles.splice(i, 1);
+          confettiParts.splice(i, 1);
         }
       }
 
-      if (particles.length > 0) {
-        animationFrame = requestAnimationFrame(animateConfetti);
+      if (confettiParts.length > 0) {
+        confettiTimer = requestAnimationFrame(animateConfetti);
       } else {
-        animationFrame = null;
+        confettiTimer = null;
       }
     }
 
-    // Direct synchronous execution to ensure immediate render
-    startNewAttempt();
+    // Attach control buttons
+    document.getElementById("btnNewRound").onclick = buildQuizDOM;
+    document.getElementById("btnReset").onclick = function() {
+      if (confirm("Reset all mastered question history for Unit 2?")) {
+        memoryMastered = [];
+        try { localStorage.removeItem(STORAGE_TAG); } catch (err) {}
+        buildQuizDOM();
+      }
+    };
+
+    // Run first round
+    buildQuizDOM();
   </script>
 </body>
 </html>
